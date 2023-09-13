@@ -391,6 +391,8 @@ class StoryView extends StatefulWidget {
 
   final Widget leading;
 
+  final bool  showShadow;
+
   StoryView({
     required this.storyItems,
     required this.controller,
@@ -405,7 +407,7 @@ class StoryView extends StatefulWidget {
     required this.avatar,
     required this.title,
     required this.tick,
-    required this.leading,
+    required this.leading, required this.showShadow,
   });
 
   @override
@@ -611,42 +613,44 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               textDirection: TextDirection.rtl,
               child: _currentView,
             ),
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              height: 100,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.4),
-                      Colors.transparent,
-                    ],
+            if (widget.showShadow)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 100,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.4),
+                        Colors.transparent,
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 100,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Colors.black.withOpacity(0.4),
-                      Colors.transparent,
-                    ],
+            if (widget.showShadow)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: 100,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withOpacity(0.4),
+                        Colors.transparent,
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
             Positioned(
               height: 160,
               left: 16,
