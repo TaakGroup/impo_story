@@ -215,7 +215,7 @@ class StoryItem {
     Color? buttonForegroundColor,
     Color? buttonBackgroundColor,
   ) {
-    if (storyModel.events.contains(StoryEventType.video)) {
+    if (storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.video) != null) {
       final video = storyModel.events.firstWhere((element) => element.type == StoryEventType.video);
       final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
       return StoryItem.pageVideo(
@@ -238,7 +238,7 @@ class StoryItem {
                 child: Text(cta.text),
               ),
       );
-    } else if (storyModel.events.contains(StoryEventType.image)) {
+    } else if (storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.image) != null) {
       final image = storyModel.events.firstWhere((element) => element.type == StoryEventType.image);
       final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
       return StoryItem.pageImage(
@@ -263,7 +263,7 @@ class StoryItem {
       );
     } else {
       return StoryItem(
-        Center(child: Text('Not Supported!')),
+        Center(child: Text('Not Supported')),
         duration: Duration(seconds: 15),
       );
     }
