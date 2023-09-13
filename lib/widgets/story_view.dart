@@ -210,56 +210,46 @@ class StoryItem {
 
   factory StoryItem.impo(
     StoryModel storyModel,
-    StoryController controller,
+    StoryController controller, {
     TextStyle? ctaTextStyle,
     Color? buttonForegroundColor,
     Color? buttonBackgroundColor,
-  ) {
-    if (storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.video) != null) {
-      final video = storyModel.events.firstWhere((element) => element.type == StoryEventType.video);
-      final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
+    Color? shadowColor,
+  }) {
+    final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
+    final video = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.video);
+    final image = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.image);
+
+    final ctaWidget = cta == null
+        ? SizedBox()
+        : ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+              shadowColor: shadowColor,
+              backgroundColor: buttonBackgroundColor ?? Colors.white,
+              foregroundColor: buttonForegroundColor,
+              textStyle: ctaTextStyle,
+            ),
+            child: Text(cta.text!),
+          );
+
+    if (video != null) {
       return StoryItem.pageVideo(
         video.link,
         imageFit: BoxFit.cover,
         duration: Duration(milliseconds: storyModel.duration),
         controller: controller,
-        cta: cta == null
-            ? SizedBox()
-            : ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  shadowColor: Color(0x19383838),
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-                  backgroundColor: buttonBackgroundColor ?? Colors.white,
-                  foregroundColor: buttonForegroundColor,
-                  textStyle: ctaTextStyle,
-                ),
-                child: Text(cta.text),
-              ),
+        cta: ctaWidget,
       );
-    } else if (storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.image) != null) {
-      final image = storyModel.events.firstWhere((element) => element.type == StoryEventType.image);
-      final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
+    } else if (image != null) {
       return StoryItem.pageImage(
         url: image.link,
         imageFit: BoxFit.cover,
         duration: Duration(milliseconds: storyModel.duration),
         controller: controller,
-        cta: cta == null
-            ? SizedBox()
-            : ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                  shadowColor: Color(0x19383838),
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-                  backgroundColor: buttonBackgroundColor ?? Colors.white,
-                  foregroundColor: buttonForegroundColor,
-                  textStyle: ctaTextStyle,
-                ),
-                child: Text(cta.text),
-              ),
+        cta: ctaWidget,
       );
     } else {
       return StoryItem(
@@ -287,10 +277,13 @@ class StoryItem {
           color: Colors.black,
           child: Stack(
             children: <Widget>[
-              StoryVideo.url(
-                url,
-                controller: controller,
-                requestHeaders: requestHeaders,
+              FittedBox(
+                fit: BoxFit.cover,
+                child: StoryVideo.url(
+                  url,
+                  controller: controller,
+                  requestHeaders: requestHeaders,
+                ),
               ),
               SafeArea(
                 child: Align(
