@@ -103,8 +103,9 @@ class StoryVideoState extends State<StoryVideo> {
           SizedBox.expand(
             child: FittedBox(
               fit: BoxFit.cover,
-              child: AspectRatio(
-                aspectRatio: playerController!.value.aspectRatio,
+              child: SizedBox(
+                width: playerController?.value.size.width ?? 0,
+                height: playerController?.value.size.height ?? 0,
                 child: VideoPlayer(playerController!),
               ),
             ),
