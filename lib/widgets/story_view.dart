@@ -111,7 +111,7 @@ class StoryItem {
     required StoryController controller,
     Key? key,
     BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
+    Widget? cta,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
     Duration? duration,
@@ -140,17 +140,7 @@ class StoryItem {
                     horizontal: 24,
                     vertical: 8,
                   ),
-                  color: caption != null ? Colors.black54 : Colors.transparent,
-                  child: caption != null
-                      ? Text(
-                          caption,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      : SizedBox(),
+                  child: cta,
                 ),
               ),
             )
@@ -224,7 +214,7 @@ class StoryItem {
     Key? key,
     Duration? duration,
     BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
+    Widget? cta,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
   }) {
@@ -246,14 +236,7 @@ class StoryItem {
                     width: double.infinity,
                     margin: EdgeInsets.only(bottom: 24),
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    color: caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
+                    child: cta,
                   ),
                 ),
               )
@@ -271,7 +254,7 @@ class StoryItem {
     ImageProvider image, {
     Key? key,
     BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
+    Widget? cta,
     bool shown = false,
     Duration? duration,
   }) {
@@ -301,17 +284,7 @@ class StoryItem {
                       horizontal: 24,
                       vertical: 8,
                     ),
-                    color: caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
+                    child: cta,
                   ),
                 ),
               )
