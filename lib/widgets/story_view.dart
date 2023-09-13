@@ -4,6 +4,8 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:story_view/models/story_events.dart';
+import 'package:story_view/models/story_model.dart';
 
 import '../controller/story_controller.dart';
 import '../utils.dart';
@@ -206,6 +208,67 @@ class StoryItem {
     );
   }
 
+  factory StoryItem.impo(
+    StoryModel storyModel,
+    StoryController controller,
+    TextStyle? ctaTextStyle,
+    Color? buttonForegroundColor,
+    Color? buttonBackgroundColor,
+  ) {
+    if (storyModel.events.contains(StoryEventType.video)) {
+      final video = storyModel.events.firstWhere((element) => element.type == StoryEventType.video);
+      final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
+      return StoryItem.pageVideo(
+        video.link,
+        imageFit: BoxFit.cover,
+        duration: Duration(milliseconds: storyModel.duration),
+        controller: controller,
+        cta: cta == null
+            ? SizedBox()
+            : ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  shadowColor: Color(0x19383838),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                  backgroundColor: buttonBackgroundColor ?? Colors.white,
+                  foregroundColor: buttonForegroundColor,
+                  textStyle: ctaTextStyle,
+                ),
+                child: Text(cta.text),
+              ),
+      );
+    } else if (storyModel.events.contains(StoryEventType.image)) {
+      final image = storyModel.events.firstWhere((element) => element.type == StoryEventType.image);
+      final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
+      return StoryItem.pageImage(
+        url: image.link,
+        imageFit: BoxFit.cover,
+        duration: Duration(milliseconds: storyModel.duration),
+        controller: controller,
+        cta: cta == null
+            ? SizedBox()
+            : ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                  shadowColor: Color(0x19383838),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+                  backgroundColor: buttonBackgroundColor ?? Colors.white,
+                  foregroundColor: buttonForegroundColor,
+                  textStyle: ctaTextStyle,
+                ),
+                child: Text(cta.text),
+              ),
+      );
+    } else {
+      return StoryItem(
+        Center(child: Text('Not Supported!')),
+        duration: Duration(seconds: 15),
+      );
+    }
+  }
+
   /// Shorthand for creating page video. [controller] should be same instance as
   /// one passed to the `StoryView`
   factory StoryItem.pageVideo(
@@ -391,7 +454,7 @@ class StoryView extends StatefulWidget {
 
   final Widget leading;
 
-  final bool  showShadow;
+  final bool showShadow;
 
   StoryView({
     required this.storyItems,
@@ -407,7 +470,8 @@ class StoryView extends StatefulWidget {
     required this.avatar,
     required this.title,
     required this.tick,
-    required this.leading, required this.showShadow,
+    required this.leading,
+    required this.showShadow,
   });
 
   @override

@@ -5,5 +5,10 @@ enum StoryEventType {
 }
 
 class StoryEvents {
-  // final StoryEventType type;
+  final StoryEventType type;
+  final String link;
+  final String text;
+
+
+  StoryEvents(this.type, this.link, this.text);
 }
