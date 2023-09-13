@@ -138,8 +138,8 @@ class StoryVideoState extends State<StoryVideo> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.black,
-      height: double.infinity,
-      width: double.infinity,
+      // height: double.infinity,
+      // width: double.infinity,
       child: getContentView(),
     );
   }
