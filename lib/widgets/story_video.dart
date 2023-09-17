@@ -104,27 +104,29 @@ class StoryVideoState extends State<StoryVideo> {
           child: VideoPlayer(playerController!),
         ),
       );
+    } else if (widget.videoLoader.state == LoadState.loading) {
+      return Center(
+        child: Container(
+          width: 70,
+          height: 70,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            strokeWidth: 3,
+          ),
+        ),
+      );
+    } else if (widget.videoLoader.state == LoadState.failure) {
+      return Center(
+        child: Text(
+          "Media failed to load",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      );
+    } else {
+      return SizedBox();
     }
-
-    return widget.videoLoader.state == LoadState.loading
-        ? Center(
-            child: Container(
-              width: 70,
-              height: 70,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                strokeWidth: 3,
-              ),
-            ),
-          )
-        : Center(
-            child: Text(
-              "Media failed to load",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          );
   }
 
   @override
@@ -137,7 +139,6 @@ class StoryVideoState extends State<StoryVideo> {
         child: FittedBox(
           fit: BoxFit.cover,
           child: SizedBox(
-            // width: MediaQuery.of(context).size.height * 9 / 16,
             height: MediaQuery.of(context).size.height,
             child: getContentView(),
           ),
