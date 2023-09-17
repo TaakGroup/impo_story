@@ -232,7 +232,7 @@ class StoryItem {
               foregroundColor: buttonForegroundColor,
               textStyle: ctaTextStyle,
             ),
-            child: Text(cta.text!),
+            child: Text(cta.text ?? ""),
           );
 
     if (video != null) {

@@ -5,10 +5,21 @@ enum StoryEventType {
 }
 
 class StoryEvents {
-  final StoryEventType type;
-  final String link;
-  final String? text;
+  late StoryEventType type;
+  late String link;
+  late String? text;
 
+  StoryEvents({required this.type, required this.link});
 
-  StoryEvents(this.type, this.link, this.text);
+  StoryEvents.fromJson(Map<String, dynamic> json) {
+    type = StoryEventType.values[json['type'] ?? 0];
+    link = json['link'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
+    data['link'] = this.link;
+    return data;
+  }
 }

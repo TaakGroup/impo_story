@@ -1,0 +1,43 @@
+{
+  "stories": [
+    {
+      "id": "1",
+      "isViewed": false,
+      "text": "پریود",
+      "coverImage": "https://cover.impoapi.ir/cover1-(2).png",
+      "duration": 46000,
+      "events": [
+        {
+          "type": 1,
+          "link": "https://timneh.arvanvod.ir/52O3Xod4nv/WOk3P72d8j/origin_kjgECnDlr2wihE6vsfMdvIn8uJOjETVDdlWHYEtC.mp4"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "isViewed": false,
+      "text": "ورزش",
+      "coverImage": "https://cover.impoapi.ir/cover2-(1).png",
+      "duration": 28000,
+      "events": [
+        {
+          "type": 1,
+          "link": "https://timneh.arvanvod.ir/52O3Xod4nv/bEvmyMmMYy/origin_15tSXQJzvKT3nndeA2TLd2B3jtpBEFgR6FuO6Bsv.mp4"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "isViewed": false,
+      "text": "عادت",
+      "coverImage": "https://cover.impoapi.ir/cover3-(1).png",
+      "duration": 13000,
+      "events": [
+        {
+          "type": 1,
+          "link": "https://timneh.arvanvod.ir/52O3Xod4nv/m5YZPrqOEe/origin_HmDRDQLKRrFulW5iybJaf6fq45iwcQg92XaB1arv.mp4"
+        }
+      ]
+    }
+  ]
+}
