@@ -440,7 +440,7 @@ class StoryView extends StatefulWidget {
 
   final Widget title;
 
-  final Widget tick;
+  final Widget mark;
 
   final Widget leading;
 
@@ -459,7 +459,7 @@ class StoryView extends StatefulWidget {
     this.indicatorForegroundColor,
     required this.avatar,
     required this.title,
-    required this.tick,
+    required this.mark,
     required this.leading,
     required this.showShadow,
   });
@@ -705,24 +705,29 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            // Positioned(
-            //   height: 160,
-            //   left: 16,
-            //   child: Row(
-            //     children: [
-            //       widget.tick,
-            //       const SizedBox(width: 2),
-            //       widget.title,
-            //       const SizedBox(width: 8),
-            //       CircleAvatar(
-            //         radius: 14,
-            //         child: widget.avatar,
-            //       ),
-            //       Spacer(),
-            //       widget.leading
-            //     ],
-            //   ),
-            // ),
+            Positioned(
+              height: 160,
+              left: 16,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      widget.mark,
+                      const SizedBox(width: 2),
+                      widget.title,
+                      const SizedBox(width: 8),
+                      CircleAvatar(
+                        radius: 14,
+                        child: widget.avatar,
+                      ),
+                    ],
+                  ),
+                  widget.leading
+                ],
+              ),
+            ),
             Visibility(
               visible: widget.progressPosition != ProgressPosition.none,
               child: Align(
