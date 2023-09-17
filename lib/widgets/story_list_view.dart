@@ -8,6 +8,7 @@ class StoryListView extends StatelessWidget {
   final Color viewedColor, notViewedColor;
   final double height;
   final double coverSize;
+  final double spacing;
 
   const StoryListView({
     required this.stories,
@@ -17,6 +18,7 @@ class StoryListView extends StatelessWidget {
     required this.onStoryPressed,
     this.height = 100,
     this.coverSize = 64,
+    this.spacing = 16,
   });
 
   @override
@@ -30,7 +32,7 @@ class StoryListView extends StatelessWidget {
         itemCount: stories.length,
         itemBuilder: (_, index) => StoryItemWidget(
           onTap: () => onStoryPressed.call(stories[index]),
-          padding: const EdgeInsets.only(left: 16.0),
+          padding: EdgeInsets.only(left: spacing),
           story: stories[index],
           notViewedColor: notViewedColor,
           viewedColor: viewedColor,
