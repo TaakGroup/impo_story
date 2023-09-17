@@ -129,11 +129,22 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      height: double.infinity,
-      width: double.infinity,
-      child: getContentView(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          color: Colors.black,
+          height: double.infinity,
+          width: double.infinity,
+          child: FittedBox(
+            fit: BoxFit.cover,
+            child: SizedBox(
+              width: constraints.maxWidth * playerController!.value.aspectRatio,
+              height: constraints.maxHeight,
+              child: getContentView(),
+            ),
+          ),
+        );
+      }
     );
   }
 
