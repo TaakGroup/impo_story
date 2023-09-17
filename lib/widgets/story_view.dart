@@ -216,6 +216,7 @@ class StoryItem {
     StoryModel storyModel,
     StoryController controller, {
     ButtonStyle? buttonStyle,
+    ButtonStyle? retryButtonStyle,
     TextStyle? errorTextStyle,
     Function(String link)? onButtonPressed,
   }) {
@@ -250,6 +251,7 @@ class StoryItem {
         cta: ctaWidget,
         shown: storyModel.isViewed,
         errorTextStyle: errorTextStyle,
+        retryButtonStyle: retryButtonStyle
       );
     } else {
       return StoryItem(
