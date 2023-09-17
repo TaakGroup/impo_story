@@ -708,24 +708,27 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             Positioned(
               height: 160,
               left: 16,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      widget.mark,
-                      const SizedBox(width: 2),
-                      widget.title,
-                      const SizedBox(width: 8),
-                      CircleAvatar(
-                        radius: 14,
-                        child: widget.avatar,
-                      ),
-                    ],
-                  ),
-                  widget.leading
-                ],
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        widget.mark,
+                        const SizedBox(width: 2),
+                        widget.title,
+                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          radius: 14,
+                          child: widget.avatar,
+                        ),
+                      ],
+                    ),
+                    widget.leading
+                  ],
+                ),
               ),
             ),
             Visibility(
