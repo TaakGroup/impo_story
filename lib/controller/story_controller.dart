@@ -29,6 +29,12 @@ class StoryController {
     playbackNotifier.add(PlaybackState.previous);
   }
 
+  void jumpTo(int index) {
+    for (int i = 0; i < index; i++) {
+      playbackNotifier.add(PlaybackState.next);
+    }
+  }
+
   /// Remember to call dispose when the story screen is disposed to close
   /// the notifier stream.
   void dispose() {

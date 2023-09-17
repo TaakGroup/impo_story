@@ -233,6 +233,7 @@ class StoryItem {
         duration: Duration(milliseconds: storyModel.duration),
         controller: controller,
         cta: ctaWidget,
+        shown: storyModel.isViewed,
       );
     } else if (image != null) {
       return StoryItem.pageImage(
@@ -241,6 +242,7 @@ class StoryItem {
         duration: Duration(milliseconds: storyModel.duration),
         controller: controller,
         cta: ctaWidget,
+        shown: storyModel.isViewed,
       );
     } else {
       return StoryItem(
