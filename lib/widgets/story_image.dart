@@ -32,7 +32,7 @@ class ImageLoader {
     final fileStream = DefaultCacheManager().getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen(
-      (fileResponse) {
+          (fileResponse) {
         if (!(fileResponse is FileInfo)) return;
         // the reason for this is that, when the cache manager fetches
         // the image again from network, the provided `onComplete` should
@@ -67,26 +67,26 @@ class ImageLoader {
 class StoryImage extends StatefulWidget {
   final ImageLoader imageLoader;
   final TextStyle? errorTextStyle;
+  final ButtonStyle? retryButtonStyle;
 
   final BoxFit? fit;
 
   final StoryController? controller;
 
-  StoryImage(
-    this.imageLoader, {
+  StoryImage(this.imageLoader, {
     Key? key,
     this.controller,
     this.fit,
-    this.errorTextStyle,
+    this.errorTextStyle, this.retryButtonStyle,
   }) : super(key: key ?? UniqueKey());
 
   /// Use this shorthand to fetch images/gifs from the provided [url]
-  factory StoryImage.url(
-    String url, {
+  factory StoryImage.url(String url, {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
     TextStyle? errorTextStyle,
+    ButtonStyle? retryButtonStyle,
     Key? key,
   }) {
     return StoryImage(
@@ -94,6 +94,7 @@ class StoryImage extends StatefulWidget {
       controller: controller,
       fit: fit,
       errorTextStyle: errorTextStyle,
+      retryButtonStyle: retryButtonStyle,
       key: key,
     );
   }
@@ -185,6 +186,8 @@ class StoryImageState extends State<StoryImage> {
         );
       case LoadState.failure:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.refresh_outlined, size: 32, color: Color(0xff1C1C1C)),
             SizedBox(
@@ -201,6 +204,7 @@ class StoryImageState extends State<StoryImage> {
             ),
             OutlinedButton(
               onPressed: initState,
+              style: widget.retryButtonStyle,
               child: Text('تلاش مجدد'),
             )
           ],

@@ -108,16 +108,18 @@ class StoryItem {
 
   /// Factory constructor for page images. [controller] should be same instance as
   /// one passed to the `StoryView`
-  factory StoryItem.pageImage(
-      {required String url,
-      required StoryController controller,
-      Key? key,
-      BoxFit imageFit = BoxFit.fitWidth,
-      Widget? cta,
-      bool shown = false,
-      Map<String, dynamic>? requestHeaders,
-      Duration? duration,
-      TextStyle? errorTextStyle}) {
+  factory StoryItem.pageImage({
+    required String url,
+    required StoryController controller,
+    Key? key,
+    BoxFit imageFit = BoxFit.fitWidth,
+    Widget? cta,
+    bool shown = false,
+    Map<String, dynamic>? requestHeaders,
+    Duration? duration,
+    ButtonStyle? retryButtonStyle,
+    TextStyle? errorTextStyle,
+  }) {
     return StoryItem(
       Container(
         key: key,
@@ -130,6 +132,7 @@ class StoryItem {
               fit: imageFit,
               requestHeaders: requestHeaders,
               errorTextStyle: errorTextStyle,
+              retryButtonStyle: retryButtonStyle,
             ),
             SafeArea(
               child: Align(
