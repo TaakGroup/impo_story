@@ -108,16 +108,16 @@ class StoryItem {
 
   /// Factory constructor for page images. [controller] should be same instance as
   /// one passed to the `StoryView`
-  factory StoryItem.pageImage({
-    required String url,
-    required StoryController controller,
-    Key? key,
-    BoxFit imageFit = BoxFit.fitWidth,
-    Widget? cta,
-    bool shown = false,
-    Map<String, dynamic>? requestHeaders,
-    Duration? duration,
-  }) {
+  factory StoryItem.pageImage(
+      {required String url,
+      required StoryController controller,
+      Key? key,
+      BoxFit imageFit = BoxFit.fitWidth,
+      Widget? cta,
+      bool shown = false,
+      Map<String, dynamic>? requestHeaders,
+      Duration? duration,
+      TextStyle? errorTextStyle}) {
     return StoryItem(
       Container(
         key: key,
@@ -129,6 +129,7 @@ class StoryItem {
               controller: controller,
               fit: imageFit,
               requestHeaders: requestHeaders,
+              errorTextStyle: errorTextStyle,
             ),
             SafeArea(
               child: Align(
@@ -212,6 +213,7 @@ class StoryItem {
     StoryModel storyModel,
     StoryController controller, {
     ButtonStyle? buttonStyle,
+    TextStyle? errorTextStyle,
     Function(String link)? onButtonPressed,
   }) {
     final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
@@ -234,6 +236,7 @@ class StoryItem {
         controller: controller,
         cta: ctaWidget,
         shown: storyModel.isViewed,
+        errorTextStyle: errorTextStyle,
       );
     } else if (image != null) {
       return StoryItem.pageImage(
@@ -243,6 +246,7 @@ class StoryItem {
         controller: controller,
         cta: ctaWidget,
         shown: storyModel.isViewed,
+        errorTextStyle: errorTextStyle,
       );
     } else {
       return StoryItem(
@@ -254,16 +258,15 @@ class StoryItem {
 
   /// Shorthand for creating page video. [controller] should be same instance as
   /// one passed to the `StoryView`
-  factory StoryItem.pageVideo(
-    String url, {
-    required StoryController controller,
-    Key? key,
-    Duration? duration,
-    BoxFit imageFit = BoxFit.fitWidth,
-    Widget? cta,
-    bool shown = false,
-    Map<String, dynamic>? requestHeaders,
-  }) {
+  factory StoryItem.pageVideo(String url,
+      {required StoryController controller,
+      Key? key,
+      Duration? duration,
+      BoxFit imageFit = BoxFit.fitWidth,
+      Widget? cta,
+      bool shown = false,
+      Map<String, dynamic>? requestHeaders,
+      TextStyle? errorTextStyle}) {
     return StoryItem(
       Container(
         key: key,
@@ -274,6 +277,7 @@ class StoryItem {
               url,
               controller: controller,
               requestHeaders: requestHeaders,
+              errorTextStyle: errorTextStyle,
             ),
             SafeArea(
               child: Align(

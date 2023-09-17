@@ -66,6 +66,7 @@ class ImageLoader {
 /// forward animated media.
 class StoryImage extends StatefulWidget {
   final ImageLoader imageLoader;
+  final TextStyle? errorTextStyle;
 
   final BoxFit? fit;
 
@@ -76,6 +77,7 @@ class StoryImage extends StatefulWidget {
     Key? key,
     this.controller,
     this.fit,
+    this.errorTextStyle,
   }) : super(key: key ?? UniqueKey());
 
   /// Use this shorthand to fetch images/gifs from the provided [url]
@@ -84,12 +86,14 @@ class StoryImage extends StatefulWidget {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
+    TextStyle? errorTextStyle,
     Key? key,
   }) {
     return StoryImage(
       ImageLoader(url, requestHeaders: requestHeaders),
       controller: controller,
       fit: fit,
+      errorTextStyle: errorTextStyle,
       key: key,
     );
   }
@@ -180,13 +184,27 @@ class StoryImageState extends State<StoryImage> {
           fit: widget.fit,
         );
       case LoadState.failure:
-        return Center(
-            child: Text(
-          "Image failed to load",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ));
+        return Column(
+          children: [
+            Icon(Icons.refresh_outlined, size: 32, color: Color(0xff1C1C1C)),
+            SizedBox(
+              width: double.infinity,
+              height: 8,
+            ),
+            Text(
+              "برقراری ارتباط امکان پذیر نیست",
+              style: widget.errorTextStyle?.copyWith(color: Colors.white),
+            ),
+            SizedBox(
+              height: 16,
+              width: double.infinity,
+            ),
+            OutlinedButton(
+              onPressed: initState,
+              child: Text('تلاش مجدد'),
+            )
+          ],
+        );
       default:
         return Center(
           child: Container(
