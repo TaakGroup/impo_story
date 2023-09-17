@@ -42,14 +42,17 @@ class VideoLoader {
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
+  final TextStyle? errorTextStyle;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key? key}) : super(key: key ?? UniqueKey());
+  StoryVideo(this.videoLoader, {this.storyController, Key? key, this.errorTextStyle}) : super(key: key ?? UniqueKey());
 
-  static StoryVideo url(String url, {StoryController? controller, Map<String, dynamic>? requestHeaders, Key? key}) {
+  static StoryVideo url(String url,
+      {StoryController? controller, Map<String, dynamic>? requestHeaders, TextStyle? errorTextStyle, Key? key}) {
     return StoryVideo(
       VideoLoader(url, requestHeaders: requestHeaders),
       storyController: controller,
       key: key,
+      errorTextStyle: errorTextStyle,
     );
   }
 
@@ -116,13 +119,17 @@ class StoryVideoState extends State<StoryVideo> {
         ),
       );
     } else if (widget.videoLoader.state == LoadState.failure) {
-      return Center(
-        child: Text(
-          "Media failed to load",
-          style: TextStyle(
-            color: Colors.white,
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(Icons.refresh_outlined, size: 32, color: Color(0xff1C1C1C)),
+          SizedBox(width: double.infinity,height: 8,),
+          Text(
+            "برقراری ارتباط امکان پذیر نیست",
+            style: widget.errorTextStyle?.copyWith(color: Colors.white),
           ),
-        ),
+        ],
       );
     } else {
       return SizedBox();
