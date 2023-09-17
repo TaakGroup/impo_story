@@ -130,8 +130,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      return Container(
+    return Container(
         color: Colors.black,
         child: OverflowBox(
           maxWidth: double.infinity,
@@ -139,14 +138,14 @@ class StoryVideoState extends State<StoryVideo> {
           child: FittedBox(
             fit: BoxFit.cover,
             child: SizedBox(
-              width: constraints.maxHeight * playerController!.value.aspectRatio,
-              height: constraints.maxHeight,
+              width: MediaQuery.of(context).size.height * playerController!.value.aspectRatio,
+              height: MediaQuery.of(context).size.height,
               child: getContentView(),
             ),
           ),
         ),
       );
-    });
+
   }
 
   @override
