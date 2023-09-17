@@ -6,6 +6,8 @@ class StoryListView extends StatelessWidget {
   final TextStyle? textStyle;
   final Function(StoryModel) onStoryPressed;
   final Color viewedColor, notViewedColor;
+  final double height;
+  final double coverSize;
 
   const StoryListView({
     required this.stories,
@@ -13,12 +15,14 @@ class StoryListView extends StatelessWidget {
     required this.viewedColor,
     required this.notViewedColor,
     required this.onStoryPressed,
+    this.height = 100,
+    this.coverSize = 64,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 88,
+      height: height,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
@@ -31,6 +35,7 @@ class StoryListView extends StatelessWidget {
           notViewedColor: notViewedColor,
           viewedColor: viewedColor,
           textStyle: textStyle,
+          size: coverSize,
         ),
       ),
     );
@@ -52,7 +57,7 @@ class StoryItemWidget extends StatelessWidget {
     this.textStyle,
     required this.viewedColor,
     required this.notViewedColor,
-    this.size = 64,
+    required this.size,
   });
 
   @override
@@ -74,7 +79,7 @@ class StoryItemWidget extends StatelessWidget {
               ),
               child: Container(
                 width: size - 1.5,
-                height: size  - 1.5,
+                height: size - 1.5,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
