@@ -208,10 +208,10 @@ class StoryItem {
     );
   }
 
-  factory StoryItem.impo(
+  factory StoryItem.fromModel(
     StoryModel storyModel,
     StoryController controller, {
-    TextStyle? ctaTextStyle,
+    TextStyle? buttonTextStyle,
     Color? buttonForegroundColor,
     Color? buttonBackgroundColor,
     Color? shadowColor,
@@ -230,7 +230,7 @@ class StoryItem {
               shadowColor: shadowColor,
               backgroundColor: buttonBackgroundColor ?? Colors.white,
               foregroundColor: buttonForegroundColor,
-              textStyle: ctaTextStyle,
+              textStyle: buttonTextStyle,
             ),
             child: Text(cta.text ?? ""),
           );
