@@ -211,10 +211,8 @@ class StoryItem {
   factory StoryItem.fromModel(
     StoryModel storyModel,
     StoryController controller, {
-    TextStyle? buttonTextStyle,
-    Color? buttonForegroundColor,
-    Color? buttonBackgroundColor,
-    Color? shadowColor,
+    ButtonStyle? buttonStyle,
+    Function(String link)? onButtonPressed,
   }) {
     final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
     final video = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.video);
@@ -223,16 +221,9 @@ class StoryItem {
     final ctaWidget = cta == null
         ? SizedBox()
         : ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 24),
-              shadowColor: shadowColor,
-              backgroundColor: buttonBackgroundColor ?? Colors.white,
-              foregroundColor: buttonForegroundColor,
-              textStyle: buttonTextStyle,
-            ),
-            child: Text(cta.text ?? ""),
+            onPressed: () => onButtonPressed?.call(cta.link),
+            style: buttonStyle,
+            child: Text(cta.text!),
           );
 
     if (video != null) {
@@ -272,32 +263,32 @@ class StoryItem {
     Map<String, dynamic>? requestHeaders,
   }) {
     return StoryItem(
-        Container(
-          key: key,
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              StoryVideo.url(
-                url,
-                controller: controller,
-                requestHeaders: requestHeaders,
-              ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    child: cta,
-                  ),
+      Container(
+        key: key,
+        color: Colors.black,
+        child: Stack(
+          children: <Widget>[
+            StoryVideo.url(
+              url,
+              controller: controller,
+              requestHeaders: requestHeaders,
+            ),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(bottom: 64),
+                  child: cta,
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
-        shown: shown,
-        duration: duration ?? Duration(seconds: 10));
+      ),
+      shown: shown,
+      duration: duration ?? Duration(seconds: 10),
+    );
   }
 
   /// Shorthand for creating a story item from an image provider such as `AssetImage`
