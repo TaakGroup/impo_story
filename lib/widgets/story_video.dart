@@ -139,7 +139,7 @@ class StoryVideoState extends State<StoryVideo> {
           child: FittedBox(
             fit: BoxFit.cover,
             child: SizedBox(
-              width: constraints.maxWidth * playerController!.value.aspectRatio,
+              width: constraints.maxHeight * playerController!.value.aspectRatio,
               height: constraints.maxHeight,
               child: getContentView(),
             ),
