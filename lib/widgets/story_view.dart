@@ -690,7 +690,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            Positioned(top: 150, left: 100,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('2'))),
+            Positioned(top: 150, left: 100,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('654654646'))),
             if (widget.showShadow)
               Positioned(
                 bottom: 0,
