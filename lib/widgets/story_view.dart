@@ -129,33 +129,13 @@ class StoryItem {
       Container(
         key: key,
         color: Colors.black,
-        child: Stack(
-          children: <Widget>[
-            StoryImage.url(
-              url,
-              controller: controller,
-              fit: imageFit,
-              requestHeaders: requestHeaders,
-              errorTextStyle: errorTextStyle,
-              retryButtonStyle: retryButtonStyle,
-            ),
-            SafeArea(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(
-                    bottom: 24,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
-                  child: cta,
-                ),
-              ),
-            )
-          ],
+        child: StoryImage.url(
+          url,
+          controller: controller,
+          fit: imageFit,
+          requestHeaders: requestHeaders,
+          errorTextStyle: errorTextStyle,
+          retryButtonStyle: retryButtonStyle,
         ),
       ),
       cta ?? SizedBox(),
@@ -282,25 +262,11 @@ class StoryItem {
       Container(
         key: key,
         color: Colors.black,
-        child: Stack(
-          children: <Widget>[
-            StoryVideo.url(
-              url,
-              controller: controller,
-              requestHeaders: requestHeaders,
-              errorTextStyle: errorTextStyle,
-            ),
-            SafeArea(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(bottom: 64),
-                  child: cta,
-                ),
-              ),
-            )
-          ],
+        child: StoryVideo.url(
+          url,
+          controller: controller,
+          requestHeaders: requestHeaders,
+          errorTextStyle: errorTextStyle,
         ),
       ),
       cta ?? SizedBox(),
@@ -828,9 +794,12 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 width: 70,
               ),
             ),
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: _currentView.cta,
+            Positioned(
+              bottom: 64,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: _currentView.cta,
+              ),
             ),
           ],
         ),

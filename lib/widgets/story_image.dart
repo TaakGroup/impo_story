@@ -185,27 +185,28 @@ class StoryImageState extends State<StoryImage> {
           fit: widget.fit,
         );
       case LoadState.failure:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "برقراری ارتباط امکان پذیر نیست",
-              style: widget.errorTextStyle?.copyWith(color: Colors.white),
-            ),
-            SizedBox(
-              height: 16,
-              width: double.infinity,
-            ),
-            OutlinedButton(
-              onPressed: () {
-                print('*'*100);
-              },
-              style: widget.retryButtonStyle,
-              child: Text('تلاش مجدد'),
-            )
-          ],
-        );
+        // return Column(
+        //   crossAxisAlignment: CrossAxisAlignment.center,
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     Text(
+        //       "برقراری ارتباط امکان پذیر نیست",
+        //       style: widget.errorTextStyle?.copyWith(color: Colors.white),
+        //     ),
+        //     SizedBox(
+        //       height: 16,
+        //       width: double.infinity,
+        //     ),
+        //     OutlinedButton(
+        //       onPressed: () {
+        //         print('*'*100);
+        //       },
+        //       style: widget.retryButtonStyle,
+        //       child: Text('تلاش مجدد'),
+        //     )
+        //   ],
+        // );
+        return SizedBox();
       default:
         return Center(
           child: Container(
