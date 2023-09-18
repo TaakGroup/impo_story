@@ -9,6 +9,7 @@ class StoryListView extends StatelessWidget {
   final double height;
   final double coverSize;
   final double spacing;
+  final EdgeInsetsGeometry? padding;
 
   const StoryListView({
     required this.stories,
@@ -18,7 +19,7 @@ class StoryListView extends StatelessWidget {
     required this.onStoryPressed,
     this.height = 100,
     this.coverSize = 64,
-    this.spacing = 16,
+    this.spacing = 16, this.padding,
   });
 
   @override
@@ -28,6 +29,7 @@ class StoryListView extends StatelessWidget {
       child: SizedBox(
         height: height,
         child: ListView.builder(
+          padding: padding ?? EdgeInsets.only(right: 16),
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
           shrinkWrap: true,
