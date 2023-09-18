@@ -205,17 +205,7 @@ class StoryImageState extends State<StoryImage> {
               ),
               OutlinedButton(
                 onPressed: () {
-                  widget.imageLoader.loadImage(() async {
-                    if (mounted) {
-                      if (widget.imageLoader.state == LoadState.success) {
-                        widget.controller?.play();
-                        // forward();
-                      } else {
-                        // refresh to show error
-                        setState(() {});
-                      }
-                    }
-                  });
+                  print('*'*100);
                 },
                 style: widget.retryButtonStyle,
                 child: Text('تلاش مجدد'),
@@ -239,7 +229,7 @@ class StoryImageState extends State<StoryImage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: getContentView(),
