@@ -119,7 +119,6 @@ class StoryVideoState extends State<StoryVideo> {
         ),
       );
     } else if (widget.videoLoader.state == LoadState.failure) {
-      return SizedBox();
       // return Column(
       //   mainAxisAlignment: MainAxisAlignment.center,
       //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -139,6 +138,10 @@ class StoryVideoState extends State<StoryVideo> {
       //     ),
       //   ],
       // );
+      return Text(
+        "برقراری ارتباط امکان پذیر نیست",
+        style: widget.errorTextStyle?.copyWith(color: Colors.white),
+      );
     } else {
       return SizedBox();
     }

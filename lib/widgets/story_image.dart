@@ -206,7 +206,10 @@ class StoryImageState extends State<StoryImage> {
         //     )
         //   ],
         // );
-        return SizedBox();
+        return Text(
+          "برقراری ارتباط امکان پذیر نیست",
+          style: widget.errorTextStyle?.copyWith(color: Colors.white),
+        );
       default:
         return Center(
           child: Container(
