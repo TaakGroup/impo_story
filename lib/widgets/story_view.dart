@@ -38,12 +38,15 @@ class StoryItem {
   /// The page content
   final Widget view;
 
-  /// The page content
+  /// The cta content
   final Widget cta;
+
+  final StoryModel storyModel;
 
   StoryItem(
     this.view,
-    this.cta, {
+    this.cta,
+    this.storyModel, {
     required this.duration,
     this.shown = false,
   });
@@ -116,6 +119,7 @@ class StoryItem {
   factory StoryItem.pageImage({
     required String url,
     required StoryController controller,
+    required StoryModel model,
     Key? key,
     BoxFit imageFit = BoxFit.fitWidth,
     Widget? cta,
@@ -139,6 +143,7 @@ class StoryItem {
         ),
       ),
       cta ?? SizedBox(),
+      model,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -221,6 +226,7 @@ class StoryItem {
     if (video != null) {
       return StoryItem.pageVideo(
         video.link,
+        model: storyModel,
         imageFit: BoxFit.cover,
         duration: Duration(milliseconds: storyModel.duration),
         controller: controller,
@@ -230,18 +236,21 @@ class StoryItem {
       );
     } else if (image != null) {
       return StoryItem.pageImage(
-          url: image.link,
-          imageFit: BoxFit.cover,
-          duration: Duration(milliseconds: storyModel.duration),
-          controller: controller,
-          cta: ctaWidget,
-          shown: storyModel.isViewed,
-          errorTextStyle: errorTextStyle,
-          retryButtonStyle: retryButtonStyle);
+        url: image.link,
+        model: storyModel,
+        imageFit: BoxFit.cover,
+        duration: Duration(milliseconds: storyModel.duration),
+        controller: controller,
+        cta: ctaWidget,
+        shown: storyModel.isViewed,
+        errorTextStyle: errorTextStyle,
+        retryButtonStyle: retryButtonStyle,
+      );
     } else {
       return StoryItem(
         Center(child: Text('Not Supported')),
         ctaWidget,
+        storyModel,
         duration: Duration(seconds: 15),
       );
     }
@@ -249,15 +258,18 @@ class StoryItem {
 
   /// Shorthand for creating page video. [controller] should be same instance as
   /// one passed to the `StoryView`
-  factory StoryItem.pageVideo(String url,
-      {required StoryController controller,
-      Key? key,
-      Duration? duration,
-      BoxFit imageFit = BoxFit.fitWidth,
-      Widget? cta,
-      bool shown = false,
-      Map<String, dynamic>? requestHeaders,
-      TextStyle? errorTextStyle}) {
+  factory StoryItem.pageVideo(
+    String url, {
+    required StoryController controller,
+    required StoryModel model,
+    Key? key,
+    Duration? duration,
+    BoxFit imageFit = BoxFit.fitWidth,
+    Widget? cta,
+    bool shown = false,
+    Map<String, dynamic>? requestHeaders,
+    TextStyle? errorTextStyle,
+  }) {
     return StoryItem(
       Container(
         key: key,
@@ -270,6 +282,7 @@ class StoryItem {
         ),
       ),
       cta ?? SizedBox(),
+      model,
       shown: shown,
       duration: duration ?? Duration(seconds: 10),
     );
@@ -389,7 +402,7 @@ class StoryView extends StatefulWidget {
   final Function(Direction?)? onVerticalSwipeComplete;
 
   /// Callback for when a story is currently being shown.
-  final ValueChanged<StoryItem>? onStoryShow;
+  final ValueChanged<StoryModel>? onStoryShow;
 
   /// Where the progress indicator should be placed.
   final ProgressPosition progressPosition;
@@ -461,7 +474,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   StoryItem get _currentView {
     var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
     item ??= widget.storyItems.last;
-    return item ?? StoryItem(Container(), Container(), duration: Duration(seconds: 1));
+    return item!;
   }
 
   @override
@@ -534,7 +547,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     })!;
 
     if (widget.onStoryShow != null) {
-      widget.onStoryShow!(storyItem);
+      widget.onStoryShow!(storyItem.storyModel);
     }
 
     _animationController = AnimationController(duration: storyItem.duration, vsync: this);
@@ -798,7 +811,13 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               bottom: 64,
               child: Directionality(
                 textDirection: TextDirection.rtl,
-                child: _currentView.cta,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _currentView.cta,
+                  ],
+                ),
               ),
             ),
           ],
