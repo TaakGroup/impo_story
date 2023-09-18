@@ -77,7 +77,7 @@ class StoryItemWidget extends StatelessWidget {
               padding: const EdgeInsets.all(1.5),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: story.isViewed ? notViewedColor : viewedColor),
+                border: Border.all(color: story.isViewed ? viewedColor : notViewedColor),
               ),
               child: Container(
                 width: size - 1.5,
