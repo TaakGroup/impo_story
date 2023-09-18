@@ -190,14 +190,9 @@ class StoryImageState extends State<StoryImage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Icon(Icons.refresh_outlined, size: 32, color: Color(0xff1C1C1C)),
-              // SizedBox(
-              //   width: double.infinity,
-              //   height: 8,
-              // ),
               Text(
                 "برقراری ارتباط امکان پذیر نیست",
-                style: widget.errorTextStyle?.copyWith(color: Colors.white),
+                style: widget.errorTextStyle?.copyWith(color: Colors.red),
               ),
               SizedBox(
                 height: 16,
