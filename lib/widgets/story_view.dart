@@ -667,7 +667,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           children: <Widget>[
             Directionality(
               textDirection: TextDirection.rtl,
-              child: _currentView,
+              child: AbsorbPointer(child: _currentView),
             ),
             if (widget.showShadow)
               Positioned(
