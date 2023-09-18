@@ -667,8 +667,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           children: <Widget>[
             Directionality(
               textDirection: TextDirection.rtl,
-              child: AbsorbPointer(child: _currentView),
+              child: _currentView,
             ),
+            Positioned(top: 20,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('Hiiiiiiiiiii'))),
             if (widget.showShadow)
               Positioned(
                 top: 0,
@@ -707,6 +708,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   ),
                 ),
               ),
+            Positioned(top: 50,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('Hiiiiiiiiiii'))),
             Positioned(
               height: 160,
               left: 16,
@@ -733,6 +735,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 ),
               ),
             ),
+            Positioned(top: 80,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('Hiiiiiiiiiii'))),
             Visibility(
               visible: widget.progressPosition != ProgressPosition.none,
               child: Align(
@@ -757,6 +760,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 ),
               ),
             ),
+            Positioned(top: 100,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('Hiiiiiiiiiii'))),
             Align(
               alignment: Alignment.centerRight,
               heightFactor: 1,
@@ -809,6 +813,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       },
               ),
             ),
+            Positioned(top: 130,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('Hiiiiiiiiiii'))),
             Align(
               alignment: Alignment.centerLeft,
               heightFactor: 1,
@@ -821,6 +826,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 width: 70,
               ),
             ),
+            Positioned(top: 160,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('Hiiiiiiiiiii'))),
           ],
         ),
       ),

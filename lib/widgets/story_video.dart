@@ -123,8 +123,15 @@ class StoryVideoState extends State<StoryVideo> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(Icons.refresh_outlined, size: 32, color: Color(0xff1C1C1C)),
-          SizedBox(width: double.infinity,height: 8,),
+          Icon(
+            Icons.refresh_outlined,
+            size: 32,
+            color: Color(0xff1C1C1C),
+          ),
+          SizedBox(
+            width: double.infinity,
+            height: 8,
+          ),
           Text(
             "برقراری ارتباط امکان پذیر نیست",
             style: widget.errorTextStyle?.copyWith(color: Colors.white),
