@@ -809,13 +809,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             ),
             Positioned(
               bottom: 24,
+              left: 0,
+              right: 0,
               child: Directionality(
                 textDirection: TextDirection.rtl,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _currentView.cta,
+                    Align(alignment: Alignment.center, child: _currentView.cta),
                   ],
                 ),
               ),
