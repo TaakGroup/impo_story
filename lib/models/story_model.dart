@@ -1,6 +1,6 @@
 import 'package:story_view/models/story_events.dart';
 
-class StoryModel {
+class StoryModel extends Comparable  {
   late String id;
   late bool isViewed;
   late String text;
@@ -9,6 +9,11 @@ class StoryModel {
   late List<StoryEvents> events;
 
   StoryModel(this.isViewed, this.id, this.events, this.duration, this.coverImage, this.text);
+
+  @override
+  int compareTo(_) {
+    return isViewed ? 1 : -1;
+  }
 
   StoryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
