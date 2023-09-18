@@ -190,11 +190,11 @@ class StoryImageState extends State<StoryImage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.refresh_outlined, size: 32, color: Color(0xff1C1C1C)),
-              SizedBox(
-                width: double.infinity,
-                height: 8,
-              ),
+              // Icon(Icons.refresh_outlined, size: 32, color: Color(0xff1C1C1C)),
+              // SizedBox(
+              //   width: double.infinity,
+              //   height: 8,
+              // ),
               Text(
                 "برقراری ارتباط امکان پذیر نیست",
                 style: widget.errorTextStyle?.copyWith(color: Colors.white),
@@ -204,7 +204,19 @@ class StoryImageState extends State<StoryImage> {
                 width: double.infinity,
               ),
               OutlinedButton(
-                onPressed: initState,
+                onPressed: () {
+                  widget.imageLoader.loadImage(() async {
+                    if (mounted) {
+                      if (widget.imageLoader.state == LoadState.success) {
+                        widget.controller?.play();
+                        forward();
+                      } else {
+                        // refresh to show error
+                        setState(() {});
+                      }
+                    }
+                  });
+                },
                 style: widget.retryButtonStyle,
                 child: Text('تلاش مجدد'),
               )
