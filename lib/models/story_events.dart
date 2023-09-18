@@ -4,24 +4,44 @@ enum StoryEventType {
   cta,
 }
 
-class StoryEvents {
-  late StoryEventType type;
-  late String link;
-  late String? text;
+class LinkModel {
+  String? url;
+  late int? type;
 
-  StoryEvents({required this.type, required this.link});
-
-  StoryEvents.fromJson(Map<String, dynamic> json) {
-    type = StoryEventType.values[json['type'] - 1 ?? 0];
-    link = json['link'];
-    text = json['text'];
+  LinkModel.fromJson(Map<String, dynamic>? json) {
+    url = json?['url'];
+    type = json?['type'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['type'] = this.type;
-    data['link'] = this.link;
+    data['url'] = this.url;
+    return data;
+  }
+}
+
+class StoryEvents {
+  late StoryEventType type;
+  late String url;
+  late String? text;
+  late LinkModel link;
+
+  StoryEvents({required this.type, required this.link});
+
+  StoryEvents.fromJson(Map<String, dynamic> json) {
+    type = StoryEventType.values[json['type'] - 1 ?? 0];
+    url = json['url'];
+    text = json['text'];
+    link = LinkModel.fromJson(json['link']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['type'] = this.type;
+    data['url'] = this.url;
     data['text'] = this.text;
+    data['link'] = this.link.toJson();
     return data;
   }
 }

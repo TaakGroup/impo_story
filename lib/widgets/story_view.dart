@@ -209,7 +209,7 @@ class StoryItem {
     ButtonStyle? buttonStyle,
     ButtonStyle? retryButtonStyle,
     TextStyle? errorTextStyle,
-    Function(String link)? onButtonPressed,
+    Function(LinkModel link)? onButtonPressed,
   }) {
     final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
     final video = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.video);
@@ -225,7 +225,7 @@ class StoryItem {
 
     if (video != null) {
       return StoryItem.pageVideo(
-        video.link,
+        video.url,
         model: storyModel,
         imageFit: BoxFit.cover,
         duration: Duration(milliseconds: storyModel.duration),
@@ -236,7 +236,7 @@ class StoryItem {
       );
     } else if (image != null) {
       return StoryItem.pageImage(
-        url: image.link,
+        url: image.url,
         model: storyModel,
         imageFit: BoxFit.cover,
         duration: Duration(milliseconds: storyModel.duration),
