@@ -209,7 +209,7 @@ class StoryImageState extends State<StoryImage> {
                     if (mounted) {
                       if (widget.imageLoader.state == LoadState.success) {
                         widget.controller?.play();
-                        forward();
+                        // forward();
                       } else {
                         // refresh to show error
                         setState(() {});
