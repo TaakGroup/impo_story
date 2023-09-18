@@ -670,7 +670,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               textDirection: TextDirection.rtl,
               child: _currentView,
             ),
-            AbsorbPointer(child: Positioned(top: 100, left: 100,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('2')))),
+            AbsorbPointer(child: Positioned(top: 100, left: 100,child: OutlinedButton(onPressed: () => print('/'*100), child: Text('ji')))),
             if (widget.showShadow)
               Positioned(
                 top: 0,
