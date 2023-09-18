@@ -23,21 +23,24 @@ class StoryListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: stories.length,
-        itemBuilder: (_, index) => StoryItemWidget(
-          onTap: () => onStoryPressed.call(stories[index]),
-          padding: EdgeInsets.only(left: spacing),
-          story: stories[index],
-          notViewedColor: notViewedColor,
-          viewedColor: viewedColor,
-          textStyle: textStyle,
-          size: coverSize,
+    return Align(
+      alignment: Alignment.centerRight,
+      child: SizedBox(
+        height: height,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: stories.length,
+          itemBuilder: (_, index) => StoryItemWidget(
+            onTap: () => onStoryPressed.call(stories[index]),
+            padding: EdgeInsets.only(left: spacing),
+            story: stories[index],
+            notViewedColor: notViewedColor,
+            viewedColor: viewedColor,
+            textStyle: textStyle,
+            size: coverSize,
+          ),
         ),
       ),
     );
