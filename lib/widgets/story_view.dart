@@ -815,41 +815,41 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 width: 70,
               ),
             ),
-            StreamBuilder<LoadStateEvent>(
-              stream: _currentView.state,
-              builder: (_, snapShot) {
-                if (snapShot.data?.loadState == LoadState.failure) {
-                  return Center(
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          widget.failureIcon ?? SizedBox(),
-                          Text(
-                            "برقراری ارتباط امکان پذیر نیست",
-                            style: widget.errorTextStyle?.copyWith(color: Colors.white),
-                          ),
-                          SizedBox(
-                            height: 16,
-                            width: double.infinity,
-                          ),
-                          OutlinedButton(
-                            onPressed: () => snapShot.data?.retry?.call(),
-                            style: widget.retryButtonStyle,
-                            child: Text('تلاش مجدد'),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                } else {
-                  return SizedBox();
-                }
-              },
-            ),
+            // StreamBuilder<LoadStateEvent>(
+            //   stream: _currentView.state,
+            //   builder: (_, snapShot) {
+            //     if (snapShot.data?.loadState == LoadState.failure) {
+            //       return Center(
+            //         child: Directionality(
+            //           textDirection: TextDirection.rtl,
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.center,
+            //             mainAxisAlignment: MainAxisAlignment.center,
+            //             mainAxisSize: MainAxisSize.min,
+            //             children: [
+            //               widget.failureIcon ?? SizedBox(),
+            //               Text(
+            //                 "برقراری ارتباط امکان پذیر نیست",
+            //                 style: widget.errorTextStyle?.copyWith(color: Colors.white),
+            //               ),
+            //               SizedBox(
+            //                 height: 16,
+            //                 width: double.infinity,
+            //               ),
+            //               OutlinedButton(
+            //                 onPressed: () => snapShot.data?.retry?.call(),
+            //                 style: widget.retryButtonStyle,
+            //                 child: Text('تلاش مجدد'),
+            //               )
+            //             ],
+            //           ),
+            //         ),
+            //       );
+            //     } else {
+            //       return SizedBox();
+            //     }
+            //   },
+            // ),
             Positioned(
               bottom: 24,
               left: 0,
@@ -860,7 +860,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Align(alignment: Alignment.center, child: _currentView.cta),
+                    Align(
+                      alignment: Alignment.center,
+                      child: _currentView.cta,
+                    ),
                   ],
                 ),
               ),
