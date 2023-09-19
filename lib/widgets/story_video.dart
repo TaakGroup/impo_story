@@ -35,7 +35,7 @@ class VideoLoader {
           onComplete();
         }
       }
-    });
+    }, onError: (_) {});
   }
 }
 
@@ -43,13 +43,27 @@ class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
   final TextStyle? errorTextStyle;
+  final StreamController<(LoadState, Function?)> streamController;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key? key, this.errorTextStyle}) : super(key: key ?? UniqueKey());
+  StoryVideo(
+    this.videoLoader,
+    this.streamController, {
+    this.storyController,
+    Key? key,
+    this.errorTextStyle,
+  }) : super(key: key ?? UniqueKey());
 
-  static StoryVideo url(String url,
-      {StoryController? controller, Map<String, dynamic>? requestHeaders, TextStyle? errorTextStyle, Key? key}) {
+  static StoryVideo url(
+    String url, {
+    StoryController? controller,
+    Map<String, dynamic>? requestHeaders,
+    TextStyle? errorTextStyle,
+    required StreamController<(LoadState, Function?)> streamController,
+    Key? key,
+  }) {
     return StoryVideo(
       VideoLoader(url, requestHeaders: requestHeaders),
+      streamController,
       storyController: controller,
       key: key,
       errorTextStyle: errorTextStyle,
@@ -58,7 +72,7 @@ class StoryVideo extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return StoryVideoState();
+    return StoryVideoState(streamController);
   }
 }
 
@@ -68,6 +82,10 @@ class StoryVideoState extends State<StoryVideo> {
   StreamSubscription? _streamSubscription;
 
   VideoPlayerController? playerController;
+
+  final StreamController<(LoadState, Function?)> streamController;
+
+  StoryVideoState(this.streamController);
 
   @override
   void initState() {
@@ -101,6 +119,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success && playerController!.value.isInitialized) {
+      streamController.sink.add((LoadState.success, null));
       return Center(
         child: AspectRatio(
           aspectRatio: playerController!.value.aspectRatio,
@@ -108,6 +127,7 @@ class StoryVideoState extends State<StoryVideo> {
         ),
       );
     } else if (widget.videoLoader.state == LoadState.loading) {
+      streamController.sink.add((LoadState.failure, null));
       return Center(
         child: Container(
           width: 70,
@@ -118,31 +138,9 @@ class StoryVideoState extends State<StoryVideo> {
           ),
         ),
       );
-    } else if (widget.videoLoader.state == LoadState.failure) {
-      // return Column(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   crossAxisAlignment: CrossAxisAlignment.center,
-      //   children: [
-      //     Icon(
-      //       Icons.refresh_outlined,
-      //       size: 32,
-      //       color: Color(0xff1C1C1C),
-      //     ),
-      //     SizedBox(
-      //       width: double.infinity,
-      //       height: 8,
-      //     ),
-      //     Text(
-      //       "برقراری ارتباط امکان پذیر نیست",
-      //       style: widget.errorTextStyle?.copyWith(color: Colors.white),
-      //     ),
-      //   ],
-      // );
-      return Text(
-        "برقراری ارتباط امکان پذیر نیست",
-        style: widget.errorTextStyle?.copyWith(color: Colors.white),
-      );
     } else {
+      // if (widget.videoLoader.state == LoadState.failure)
+      streamController.sink.add((LoadState.failure, initState));
       return SizedBox();
     }
   }

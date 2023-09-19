@@ -215,8 +215,6 @@ class StoryItem {
     StoryModel storyModel,
     StoryController controller, {
     ButtonStyle? buttonStyle,
-    ButtonStyle? retryButtonStyle,
-    TextStyle? errorTextStyle,
     Function(LinkModel link)? onButtonPressed,
   }) {
     final cta = storyModel.events.firstWhereOrNull((element) => element.type == StoryEventType.cta);
@@ -240,7 +238,6 @@ class StoryItem {
         controller: controller,
         cta: ctaWidget,
         shown: storyModel.isViewed,
-        errorTextStyle: errorTextStyle,
       );
     } else {
       // if (image != null)
@@ -252,8 +249,6 @@ class StoryItem {
         controller: controller,
         cta: ctaWidget,
         shown: storyModel.isViewed,
-        errorTextStyle: errorTextStyle,
-        retryButtonStyle: retryButtonStyle,
       );
     }
   }
@@ -270,7 +265,6 @@ class StoryItem {
     Widget? cta,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
-    TextStyle? errorTextStyle,
   }) {
     StreamController<(LoadState, Function?)> streamController = StreamController<(LoadState, Function?)>();
 
@@ -280,9 +274,9 @@ class StoryItem {
         color: Colors.black,
         child: StoryVideo.url(
           url,
+          streamController: streamController,
           controller: controller,
           requestHeaders: requestHeaders,
-          errorTextStyle: errorTextStyle,
         ),
       ),
       cta ?? SizedBox(),
@@ -439,6 +433,10 @@ class StoryView extends StatefulWidget {
 
   final bool showShadow;
 
+  final TextStyle? errorTextStyle;
+
+  final ButtonStyle? retryButtonStyle;
+
   StoryView({
     required this.storyItems,
     required this.controller,
@@ -454,7 +452,7 @@ class StoryView extends StatefulWidget {
     required this.title,
     required this.mark,
     required this.leading,
-    required this.showShadow,
+    required this.showShadow, this.errorTextStyle, this.retryButtonStyle,
   });
 
   @override
@@ -826,7 +824,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                           children: [
                             Text(
                               "برقراری ارتباط امکان پذیر نیست",
-                              // style: widget.errorTextStyle?.copyWith(color: Colors.white),
+                              style: widget.errorTextStyle?.copyWith(color: Colors.white),
                             ),
                             SizedBox(
                               height: 16,
@@ -834,7 +832,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                             ),
                             OutlinedButton(
                               onPressed: () => snapShot.data?.$2?.call(),
-                              // style: widget.retryButtonStyle,
+                              style: widget.retryButtonStyle,
                               child: Text('تلاش مجدد'),
                             )
                           ],
