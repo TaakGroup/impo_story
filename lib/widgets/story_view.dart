@@ -44,7 +44,7 @@ class StoryItem {
   final StoryModel storyModel;
 
   // Stream
-  final Stream<(LoadState, Function?)> state;
+  final Stream<LoadStateEvent> state;
 
   StoryItem(
     this.view,
@@ -133,7 +133,7 @@ class StoryItem {
     ButtonStyle? retryButtonStyle,
     TextStyle? errorTextStyle,
   }) {
-    StreamController<(LoadState, Function?)> streamController = StreamController<(LoadState, Function?)>();
+    StreamController<LoadStateEvent> streamController = StreamController<LoadStateEvent>();
 
     return StoryItem(
       Container(
@@ -266,7 +266,7 @@ class StoryItem {
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
   }) {
-    StreamController<(LoadState, Function?)> streamController = StreamController<(LoadState, Function?)>();
+    StreamController<LoadStateEvent> streamController = StreamController<LoadStateEvent>();
 
     return StoryItem(
       Container(
@@ -815,10 +815,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 width: 70,
               ),
             ),
-            StreamBuilder(
+            StreamBuilder<LoadStateEvent>(
               stream: _currentView.state,
               builder: (_, snapShot) {
-                if (snapShot.data?.$1 == LoadState.failure) {
+                if (snapShot.data?.loadState == LoadState.failure) {
                   return Positioned.fill(
                     child: Center(
                       child: Directionality(
@@ -837,7 +837,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                               width: double.infinity,
                             ),
                             OutlinedButton(
-                              onPressed: () => snapShot.data?.$2?.call(),
+                              onPressed: () => snapShot.data?.retry?.call(),
                               style: widget.retryButtonStyle,
                               child: Text('تلاش مجدد'),
                             )

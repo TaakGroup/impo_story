@@ -43,7 +43,7 @@ class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
   final TextStyle? errorTextStyle;
-  final StreamController<(LoadState, Function?)> streamController;
+  final StreamController<LoadStateEvent> streamController;
 
   StoryVideo(
     this.videoLoader,
@@ -58,7 +58,7 @@ class StoryVideo extends StatefulWidget {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     TextStyle? errorTextStyle,
-    required StreamController<(LoadState, Function?)> streamController,
+    required StreamController<LoadStateEvent> streamController,
     Key? key,
   }) {
     return StoryVideo(
@@ -83,7 +83,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   VideoPlayerController? playerController;
 
-  final StreamController<(LoadState, Function?)> streamController;
+  final StreamController<LoadStateEvent> streamController;
 
   StoryVideoState(this.streamController);
 
@@ -119,7 +119,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success && playerController!.value.isInitialized) {
-      streamController.sink.add((LoadState.success, null));
+      streamController.sink.add(LoadStateEvent(LoadState.success, null));
       return Center(
         child: AspectRatio(
           aspectRatio: playerController!.value.aspectRatio,
@@ -127,7 +127,7 @@ class StoryVideoState extends State<StoryVideo> {
         ),
       );
     } else if (widget.videoLoader.state == LoadState.loading) {
-      streamController.sink.add((LoadState.failure, null));
+      streamController.sink.add(LoadStateEvent(LoadState.failure, null));
       return Center(
         child: Container(
           width: 70,
@@ -140,7 +140,7 @@ class StoryVideoState extends State<StoryVideo> {
       );
     } else {
       // if (widget.videoLoader.state == LoadState.failure)
-      streamController.sink.add((LoadState.failure, initState));
+      streamController.sink.add(LoadStateEvent(LoadState.failure, initState));
       return SizedBox();
     }
   }

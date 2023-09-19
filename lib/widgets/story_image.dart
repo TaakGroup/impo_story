@@ -13,7 +13,7 @@ import '../controller/story_controller.dart';
 class ImageLoader {
   ui.Codec? frames;
 
-  final StreamController<(LoadState, Function?)> streamController;
+  final StreamController<LoadStateEvent> streamController;
 
   String url;
 
@@ -28,7 +28,7 @@ class ImageLoader {
   void loadImage(VoidCallback onComplete) {
     if (this.frames != null) {
       this.state = LoadState.success;
-      streamController.sink.add((LoadState.success, null));
+      streamController.sink.add(LoadStateEvent(LoadState.success, null));
       onComplete();
     }
 
@@ -47,14 +47,14 @@ class ImageLoader {
         final imageBytes = fileResponse.file.readAsBytesSync();
 
         this.state = LoadState.success;
-        streamController.sink.add((LoadState.success, null));
+        streamController.sink.add(LoadStateEvent(LoadState.success, null));
 
         PaintingBinding.instance.instantiateImageCodec(imageBytes).then((codec) {
           this.frames = codec;
           onComplete();
         }, onError: (error) {
           this.state = LoadState.failure;
-          streamController.sink.add((LoadState.failure, () => loadImage(onComplete)));
+          streamController.sink.add(LoadStateEvent(LoadState.failure, () => loadImage(onComplete)));
           onComplete();
         });
       },
@@ -92,7 +92,7 @@ class StoryImage extends StatefulWidget {
     BoxFit fit = BoxFit.fitWidth,
     TextStyle? errorTextStyle,
     ButtonStyle? retryButtonStyle,
-    required StreamController<(LoadState, Function?)> streamController,
+    required StreamController<LoadStateEvent> streamController,
     Key? key,
   }) {
     return StoryImage(
