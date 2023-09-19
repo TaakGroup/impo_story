@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:get/get.dart';
 
 import '../utils.dart';
 import '../controller/story_controller.dart';
@@ -13,7 +13,7 @@ import '../controller/story_controller.dart';
 class ImageLoader {
   ui.Codec? frames;
 
-  final StreamController<LoadStateEvent> streamController;
+  final Rx<LoadStateEvent> loadEvent;
 
   String url;
 
@@ -21,14 +21,14 @@ class ImageLoader {
 
   LoadState state = LoadState.loading; // by default
 
-  ImageLoader(this.url, this.streamController, {this.requestHeaders});
+  ImageLoader(this.url, this.loadEvent, {this.requestHeaders});
 
   /// Load image from disk cache first, if not found then load from network.
   /// `onComplete` is called when [imageBytes] become available.
   void loadImage(VoidCallback onComplete) {
     if (this.frames != null) {
       this.state = LoadState.success;
-      streamController.sink.add(LoadStateEvent(LoadState.success, null));
+      loadEvent(LoadStateEvent(LoadState.success, null));
       onComplete();
     }
 
@@ -47,20 +47,20 @@ class ImageLoader {
         final imageBytes = fileResponse.file.readAsBytesSync();
 
         this.state = LoadState.success;
-        streamController.sink.add(LoadStateEvent(LoadState.success, null));
+        loadEvent(LoadStateEvent(LoadState.success, null));
 
         PaintingBinding.instance.instantiateImageCodec(imageBytes).then((codec) {
           this.frames = codec;
           onComplete();
         }, onError: (error) {
           this.state = LoadState.failure;
-          streamController.sink.add(LoadStateEvent(LoadState.failure, () => loadImage(onComplete)));
+          loadEvent(LoadStateEvent(LoadState.failure, () => loadImage(onComplete)));
           onComplete();
         });
       },
       onError: (error) {
         this.state = LoadState.failure;
-        streamController.sink.add(LoadStateEvent(LoadState.failure, () => loadImage(onComplete)));
+        loadEvent(LoadStateEvent(LoadState.failure, () => loadImage(onComplete)));
         onComplete();
       },
     );
@@ -96,11 +96,11 @@ class StoryImage extends StatefulWidget {
     BoxFit fit = BoxFit.fitWidth,
     TextStyle? errorTextStyle,
     ButtonStyle? retryButtonStyle,
-    required StreamController<LoadStateEvent> streamController,
+    required Rx<LoadStateEvent> loadEvent,
     Key? key,
   }) {
     return StoryImage(
-      ImageLoader(url, streamController, requestHeaders: requestHeaders),
+      ImageLoader(url, loadEvent, requestHeaders: requestHeaders),
       controller: controller,
       fit: fit,
       errorTextStyle: errorTextStyle,

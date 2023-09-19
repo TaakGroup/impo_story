@@ -3,10 +3,10 @@ enum LoadState { loading, success, failure }
 enum Direction { up, down, left, right }
 
 class LoadStateEvent {
-  final LoadState loadState;
+  final LoadState? loadState;
   final Function? retry;
 
-  LoadStateEvent(this.loadState, this.retry);
+  LoadStateEvent([this.loadState, this.retry]);
 }
 
 class VerticalDragInfo {

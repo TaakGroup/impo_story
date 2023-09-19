@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:story_view/models/story_events.dart';
 import 'package:story_view/models/story_model.dart';
 
@@ -44,7 +45,7 @@ class StoryItem {
   final StoryModel storyModel;
 
   // Stream
-  final Stream<LoadStateEvent> state;
+  final Rx<LoadStateEvent> state;
 
   StoryItem(
     this.view,
@@ -133,7 +134,7 @@ class StoryItem {
     ButtonStyle? retryButtonStyle,
     TextStyle? errorTextStyle,
   }) {
-    StreamController<LoadStateEvent> streamController = StreamController<LoadStateEvent>();
+    Rx<LoadStateEvent> loadEvent = LoadStateEvent().obs;
 
     return StoryItem(
       Container(
@@ -141,7 +142,7 @@ class StoryItem {
         color: Colors.black,
         child: StoryImage.url(
           url,
-          streamController: streamController,
+          loadEvent: loadEvent,
           controller: controller,
           fit: imageFit,
           requestHeaders: requestHeaders,
@@ -151,7 +152,7 @@ class StoryItem {
       ),
       cta ?? SizedBox(),
       model,
-      streamController.stream,
+      loadEvent,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -266,7 +267,7 @@ class StoryItem {
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
   }) {
-    StreamController<LoadStateEvent> streamController = StreamController<LoadStateEvent>();
+    Rx<LoadStateEvent> loadEvent = LoadStateEvent().obs;
 
     return StoryItem(
       Container(
@@ -274,14 +275,14 @@ class StoryItem {
         color: Colors.black,
         child: StoryVideo.url(
           url,
-          streamController: streamController,
+          loadEvent: loadEvent,
           controller: controller,
           requestHeaders: requestHeaders,
         ),
       ),
       cta ?? SizedBox(),
       model,
-      streamController.stream,
+      loadEvent,
       shown: shown,
       duration: duration ?? Duration(seconds: 10),
     );
@@ -815,41 +816,37 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 width: 70,
               ),
             ),
-            // StreamBuilder<LoadStateEvent>(
-            //   stream: _currentView.state,
-            //   builder: (_, snapShot) {
-            //     if (snapShot.data?.loadState == LoadState.failure) {
-            //       return Center(
-            //         child: Directionality(
-            //           textDirection: TextDirection.rtl,
-            //           child: Column(
-            //             crossAxisAlignment: CrossAxisAlignment.center,
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             mainAxisSize: MainAxisSize.min,
-            //             children: [
-            //               widget.failureIcon ?? SizedBox(),
-            //               Text(
-            //                 "برقراری ارتباط امکان پذیر نیست",
-            //                 style: widget.errorTextStyle?.copyWith(color: Colors.white),
-            //               ),
-            //               SizedBox(
-            //                 height: 16,
-            //                 width: double.infinity,
-            //               ),
-            //               OutlinedButton(
-            //                 onPressed: () => snapShot.data?.retry?.call(),
-            //                 style: widget.retryButtonStyle,
-            //                 child: Text('تلاش مجدد'),
-            //               )
-            //             ],
-            //           ),
-            //         ),
-            //       );
-            //     } else {
-            //       return SizedBox();
-            //     }
-            //   },
-            // ),
+            Obx( () {
+                if (_currentView.state.value.loadState == LoadState.failure) {
+                  return Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        widget.failureIcon ?? SizedBox(),
+                        Text(
+                          "برقراری ارتباط امکان پذیر نیست",
+                          style: widget.errorTextStyle?.copyWith(color: Colors.white),
+                        ),
+                        SizedBox(
+                          height: 16,
+                          width: double.infinity,
+                        ),
+                        OutlinedButton(
+                          onPressed: () => _currentView.state.value.retry?.call(),
+                          style: widget.retryButtonStyle,
+                          child: Text('تلاش مجدد'),
+                        )
+                      ],
+                    ),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
+            ),
             Positioned(
               bottom: 24,
               left: 0,

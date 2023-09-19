@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 import '../utils.dart';
@@ -17,9 +18,9 @@ class VideoLoader {
 
   LoadState state = LoadState.loading;
 
-  final StreamController<LoadStateEvent> streamController;
+  final Rx<LoadStateEvent> loadEvent;
 
-  VideoLoader(this.url, this.streamController, {this.requestHeaders});
+  VideoLoader(this.url, this.loadEvent, {this.requestHeaders});
 
   void loadVideo(VoidCallback onComplete) {
     if (this.videoFile != null) {
@@ -34,14 +35,14 @@ class VideoLoader {
         if (fileResponse is FileInfo) {
           if (this.videoFile == null) {
             this.state = LoadState.success;
-            streamController.sink.add(LoadStateEvent(LoadState.success, () => loadVideo(onComplete)));
+            loadEvent(LoadStateEvent(LoadState.success, () => loadVideo(onComplete)));
             this.videoFile = fileResponse.file;
             onComplete();
           }
         }
       },
       onError: (_) {
-        streamController.sink.add(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete)));
+        loadEvent(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete)));
       },
     );
   }
@@ -51,11 +52,9 @@ class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
   final TextStyle? errorTextStyle;
-  final StreamController<LoadStateEvent> streamController;
 
   StoryVideo(
-    this.videoLoader,
-    this.streamController, {
+    this.videoLoader, {
     this.storyController,
     Key? key,
     this.errorTextStyle,
@@ -66,12 +65,11 @@ class StoryVideo extends StatefulWidget {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     TextStyle? errorTextStyle,
-    required StreamController<LoadStateEvent> streamController,
+    required Rx<LoadStateEvent> loadEvent,
     Key? key,
   }) {
     return StoryVideo(
-      VideoLoader(url, streamController, requestHeaders: requestHeaders),
-      streamController,
+      VideoLoader(url, loadEvent, requestHeaders: requestHeaders),
       storyController: controller,
       key: key,
       errorTextStyle: errorTextStyle,
