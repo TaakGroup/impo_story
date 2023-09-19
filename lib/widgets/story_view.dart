@@ -860,11 +860,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Obx(
-                      () => Align(
-                        alignment: Alignment.center,
-                        child: _currentView.state.value.loadState == LoadState.success ? _currentView.cta : SizedBox(),
-                      ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: _currentView.cta,
                     ),
                   ],
                 ),
