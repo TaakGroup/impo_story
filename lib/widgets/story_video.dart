@@ -87,10 +87,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   StoryVideoState(this.streamController);
 
-  @override
-  void initState() {
-    super.initState();
-
+  initializeVideo() {
     widget.storyController!.pause();
 
     widget.videoLoader.loadVideo(() {
@@ -117,6 +114,13 @@ class StoryVideoState extends State<StoryVideo> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    initializeVideo();
+  }
+
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success && playerController!.value.isInitialized) {
       streamController.sink.add(LoadStateEvent(LoadState.success, null));
@@ -140,7 +144,7 @@ class StoryVideoState extends State<StoryVideo> {
       );
     } else {
       // if (widget.videoLoader.state == LoadState.failure)
-      streamController.sink.add(LoadStateEvent(LoadState.failure, initState));
+      streamController.sink.add(LoadStateEvent(LoadState.failure, initializeVideo));
       return SizedBox();
     }
   }
