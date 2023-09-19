@@ -13,19 +13,22 @@ import '../controller/story_controller.dart';
 class ImageLoader {
   ui.Codec? frames;
 
+  final StreamController<(LoadState, Function?)> streamController;
+
   String url;
 
   Map<String, dynamic>? requestHeaders;
 
   LoadState state = LoadState.loading; // by default
 
-  ImageLoader(this.url, {this.requestHeaders});
+  ImageLoader(this.url, this.streamController, {this.requestHeaders});
 
   /// Load image from disk cache first, if not found then load from network.
   /// `onComplete` is called when [imageBytes] become available.
   void loadImage(VoidCallback onComplete) {
     if (this.frames != null) {
       this.state = LoadState.success;
+      streamController.sink.add((LoadState.success, null));
       onComplete();
     }
 
@@ -44,12 +47,14 @@ class ImageLoader {
         final imageBytes = fileResponse.file.readAsBytesSync();
 
         this.state = LoadState.success;
+        streamController.sink.add((LoadState.success, null));
 
         PaintingBinding.instance.instantiateImageCodec(imageBytes).then((codec) {
           this.frames = codec;
           onComplete();
         }, onError: (error) {
           this.state = LoadState.failure;
+          streamController.sink.add((LoadState.failure, () => loadImage(onComplete)));
           onComplete();
         });
       },
@@ -87,10 +92,11 @@ class StoryImage extends StatefulWidget {
     BoxFit fit = BoxFit.fitWidth,
     TextStyle? errorTextStyle,
     ButtonStyle? retryButtonStyle,
+    required StreamController<(LoadState, Function?)> streamController,
     Key? key,
   }) {
     return StoryImage(
-      ImageLoader(url, requestHeaders: requestHeaders),
+      ImageLoader(url, streamController, requestHeaders: requestHeaders),
       controller: controller,
       fit: fit,
       errorTextStyle: errorTextStyle,
@@ -185,31 +191,7 @@ class StoryImageState extends State<StoryImage> {
           fit: widget.fit,
         );
       case LoadState.failure:
-        // return Column(
-        //   crossAxisAlignment: CrossAxisAlignment.center,
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     Text(
-        //       "برقراری ارتباط امکان پذیر نیست",
-        //       style: widget.errorTextStyle?.copyWith(color: Colors.white),
-        //     ),
-        //     SizedBox(
-        //       height: 16,
-        //       width: double.infinity,
-        //     ),
-        //     OutlinedButton(
-        //       onPressed: () {
-        //         print('*'*100);
-        //       },
-        //       style: widget.retryButtonStyle,
-        //       child: Text('تلاش مجدد'),
-        //     )
-        //   ],
-        // );
-        return Text(
-          "برقراری ارتباط امکان پذیر نیست",
-          style: widget.errorTextStyle?.copyWith(color: Colors.white),
-        );
+        return SizedBox();
       default:
         return Center(
           child: Container(

@@ -43,10 +43,14 @@ class StoryItem {
 
   final StoryModel storyModel;
 
+  // Stream
+  final Stream<(LoadState, Function?)> state;
+
   StoryItem(
     this.view,
     this.cta,
-    this.storyModel, {
+    this.storyModel,
+    this.state, {
     required this.duration,
     this.shown = false,
   });
@@ -129,12 +133,15 @@ class StoryItem {
     ButtonStyle? retryButtonStyle,
     TextStyle? errorTextStyle,
   }) {
+    StreamController<(LoadState, Function?)> streamController = StreamController<(LoadState, Function?)>();
+
     return StoryItem(
       Container(
         key: key,
         color: Colors.black,
         child: StoryImage.url(
           url,
+          streamController: streamController,
           controller: controller,
           fit: imageFit,
           requestHeaders: requestHeaders,
@@ -144,6 +151,7 @@ class StoryItem {
       ),
       cta ?? SizedBox(),
       model,
+      streamController.stream,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -234,9 +242,10 @@ class StoryItem {
         shown: storyModel.isViewed,
         errorTextStyle: errorTextStyle,
       );
-    } else if (image != null) {
+    } else {
+      // if (image != null)
       return StoryItem.pageImage(
-        url: image.url,
+        url: image!.url,
         model: storyModel,
         imageFit: BoxFit.cover,
         duration: Duration(milliseconds: storyModel.duration),
@@ -245,13 +254,6 @@ class StoryItem {
         shown: storyModel.isViewed,
         errorTextStyle: errorTextStyle,
         retryButtonStyle: retryButtonStyle,
-      );
-    } else {
-      return StoryItem(
-        Center(child: Text('Not Supported')),
-        ctaWidget,
-        storyModel,
-        duration: Duration(seconds: 15),
       );
     }
   }
@@ -270,6 +272,8 @@ class StoryItem {
     Map<String, dynamic>? requestHeaders,
     TextStyle? errorTextStyle,
   }) {
+    StreamController<(LoadState, Function?)> streamController = StreamController<(LoadState, Function?)>();
+
     return StoryItem(
       Container(
         key: key,
@@ -283,6 +287,7 @@ class StoryItem {
       ),
       cta ?? SizedBox(),
       model,
+      streamController.stream,
       shown: shown,
       duration: duration ?? Duration(seconds: 10),
     );
@@ -806,6 +811,41 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 ),
                 width: 70,
               ),
+            ),
+            StreamBuilder(
+              stream: _currentView.state,
+              builder: (_, snapShot) {
+                if (snapShot.data?.$1 == LoadState.failure) {
+                  return Positioned.fill(
+                    child: Center(
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "برقراری ارتباط امکان پذیر نیست",
+                              // style: widget.errorTextStyle?.copyWith(color: Colors.white),
+                            ),
+                            SizedBox(
+                              height: 16,
+                              width: double.infinity,
+                            ),
+                            OutlinedButton(
+                              onPressed: () => snapShot.data?.$2?.call(),
+                              // style: widget.retryButtonStyle,
+                              child: Text('تلاش مجدد'),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return SizedBox();
+                }
+              },
             ),
             Positioned(
               bottom: 24,
