@@ -816,30 +816,33 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 width: 70,
               ),
             ),
-            Obx( () {
+            Obx(
+              () {
                 if (_currentView.state.value.loadState == LoadState.failure) {
                   return Directionality(
                     textDirection: TextDirection.rtl,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        widget.failureIcon ?? SizedBox(),
-                        Text(
-                          "برقراری ارتباط امکان پذیر نیست",
-                          style: widget.errorTextStyle?.copyWith(color: Colors.white),
-                        ),
-                        SizedBox(
-                          height: 16,
-                          width: double.infinity,
-                        ),
-                        OutlinedButton(
-                          onPressed: () => _currentView.state.value.retry?.call(),
-                          style: widget.retryButtonStyle,
-                          child: Text('تلاش مجدد'),
-                        )
-                      ],
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          widget.failureIcon ?? SizedBox(),
+                          Text(
+                            "برقراری ارتباط امکان پذیر نیست",
+                            style: widget.errorTextStyle?.copyWith(color: Colors.white),
+                          ),
+                          SizedBox(
+                            height: 16,
+                            width: double.infinity,
+                          ),
+                          OutlinedButton(
+                            onPressed: () => _currentView.state.value.retry?.call(),
+                            style: widget.retryButtonStyle,
+                            child: Text('تلاش مجدد'),
+                          )
+                        ],
+                      ),
                     ),
                   );
                 } else {
@@ -857,9 +860,11 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: _currentView.cta,
+                    Obx(
+                      () => Align(
+                        alignment: Alignment.center,
+                        child: _currentView.state.value.loadState == LoadState.success ? _currentView.cta : SizedBox(),
+                      ),
                     ),
                   ],
                 ),

@@ -25,6 +25,7 @@ class VideoLoader {
   void loadVideo(VoidCallback onComplete) {
     if (this.videoFile != null) {
       this.state = LoadState.success;
+      loadEvent(LoadStateEvent(LoadState.success));
       onComplete();
     }
 
@@ -35,7 +36,7 @@ class VideoLoader {
         if (fileResponse is FileInfo) {
           if (this.videoFile == null) {
             this.state = LoadState.success;
-            loadEvent(LoadStateEvent(LoadState.success, () => loadVideo(onComplete)));
+            loadEvent(LoadStateEvent(LoadState.success));
             this.videoFile = fileResponse.file;
             onComplete();
           }
@@ -90,6 +91,7 @@ class StoryVideoState extends State<StoryVideo> {
   VideoPlayerController? playerController;
 
   initializeVideo() {
+    print('F'*100);
     widget.storyController!.pause();
 
     widget.videoLoader.loadVideo(() {
