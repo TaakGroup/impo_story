@@ -26,6 +26,7 @@ class VideoLoader {
   void loadVideo(VoidCallback onComplete) {
     this.state = LoadState.loading;
     SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.loading)));
+    onComplete();
 
     if (this.videoFile != null) {
       this.state = LoadState.success;
