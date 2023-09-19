@@ -127,7 +127,7 @@ class StoryVideoState extends State<StoryVideo> {
         ),
       );
     } else if (widget.videoLoader.state == LoadState.loading) {
-      streamController.sink.add(LoadStateEvent(LoadState.failure, null));
+      streamController.sink.add(LoadStateEvent(LoadState.loading, null));
       return Center(
         child: Container(
           width: 70,
