@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
@@ -36,14 +37,18 @@ class VideoLoader {
         if (fileResponse is FileInfo) {
           if (this.videoFile == null) {
             this.state = LoadState.success;
-            loadEvent(LoadStateEvent(LoadState.success));
+            SchedulerBinding.instance.addPostFrameCallback((_) {
+              loadEvent(LoadStateEvent(LoadState.success));
+            });
             this.videoFile = fileResponse.file;
             onComplete();
           }
         }
       },
       onError: (_) {
-        loadEvent(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete)));
+        SchedulerBinding.instance.addPostFrameCallback((_) {
+          loadEvent(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete)));
+        });
       },
     );
   }
@@ -91,11 +96,11 @@ class StoryVideoState extends State<StoryVideo> {
   VideoPlayerController? playerController;
 
   initializeVideo() {
-    print('F'*100);
+    print('F' * 100);
     widget.storyController!.pause();
 
     widget.videoLoader.loadVideo(() {
-      print('A'*100);
+      print('A' * 100);
       if (widget.videoLoader.state == LoadState.success) {
         this.playerController = VideoPlayerController.file(widget.videoLoader.videoFile!);
 
