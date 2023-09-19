@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 
@@ -26,9 +27,13 @@ class ImageLoader {
   /// Load image from disk cache first, if not found then load from network.
   /// `onComplete` is called when [imageBytes] become available.
   void loadImage(VoidCallback onComplete) {
+    this.state = LoadState.loading;
+    SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.loading)));
+    onComplete();
+
     if (this.frames != null) {
       this.state = LoadState.success;
-      loadEvent(LoadStateEvent(LoadState.success, null));
+      SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.success)));
       onComplete();
     }
 
@@ -46,21 +51,20 @@ class ImageLoader {
 
         final imageBytes = fileResponse.file.readAsBytesSync();
 
-        this.state = LoadState.success;
-        loadEvent(LoadStateEvent(LoadState.success, null));
-
         PaintingBinding.instance.instantiateImageCodec(imageBytes).then((codec) {
           this.frames = codec;
+          this.state = LoadState.success;
+          SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.success)));
           onComplete();
         }, onError: (error) {
           this.state = LoadState.failure;
-          loadEvent(LoadStateEvent(LoadState.failure, () => loadImage(onComplete)));
+          SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.failure, () => loadImage(onComplete))));
           onComplete();
         });
       },
       onError: (error) {
         this.state = LoadState.failure;
-        loadEvent(LoadStateEvent(LoadState.failure, () => loadImage(onComplete)));
+        SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.failure, () => loadImage(onComplete))));
         onComplete();
       },
     );
