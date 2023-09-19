@@ -25,15 +25,11 @@ class VideoLoader {
 
   void loadVideo(VoidCallback onComplete) {
     this.state = LoadState.loading;
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      loadEvent(LoadStateEvent(LoadState.loading));
-    });
+    SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.loading)));
 
     if (this.videoFile != null) {
       this.state = LoadState.success;
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        loadEvent(LoadStateEvent(LoadState.success));
-      });
+      SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.success)));
       onComplete();
     }
 
@@ -44,9 +40,7 @@ class VideoLoader {
         if (fileResponse is FileInfo) {
           if (this.videoFile == null) {
             this.state = LoadState.success;
-            SchedulerBinding.instance.addPostFrameCallback((_) {
-              loadEvent(LoadStateEvent(LoadState.success));
-            });
+            SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.success)));
             this.videoFile = fileResponse.file;
             onComplete();
           }
@@ -54,9 +48,8 @@ class VideoLoader {
       },
       onError: (_) {
         this.state = LoadState.failure;
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          loadEvent(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete)));
-        });
+        SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete))));
+        onComplete();
       },
     );
   }
