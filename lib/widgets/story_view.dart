@@ -437,6 +437,8 @@ class StoryView extends StatefulWidget {
 
   final ButtonStyle? retryButtonStyle;
 
+  final Widget? failureIcon;
+
   StoryView({
     required this.storyItems,
     required this.controller,
@@ -452,7 +454,10 @@ class StoryView extends StatefulWidget {
     required this.title,
     required this.mark,
     required this.leading,
-    required this.showShadow, this.errorTextStyle, this.retryButtonStyle,
+    required this.showShadow,
+    this.errorTextStyle,
+    this.retryButtonStyle,
+    this.failureIcon,
   });
 
   @override
@@ -822,6 +827,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            widget.failureIcon ?? SizedBox(),
                             Text(
                               "برقراری ارتباط امکان پذیر نیست",
                               style: widget.errorTextStyle?.copyWith(color: Colors.white),
