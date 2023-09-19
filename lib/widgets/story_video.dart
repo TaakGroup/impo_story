@@ -24,6 +24,11 @@ class VideoLoader {
   VideoLoader(this.url, this.loadEvent, {this.requestHeaders});
 
   void loadVideo(VoidCallback onComplete) {
+    this.state = LoadState.loading;
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      loadEvent(LoadStateEvent(LoadState.loading));
+    });
+
     if (this.videoFile != null) {
       this.state = LoadState.success;
       SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -48,6 +53,7 @@ class VideoLoader {
         }
       },
       onError: (_) {
+        this.state = LoadState.failure;
         SchedulerBinding.instance.addPostFrameCallback((_) {
           loadEvent(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete)));
         });
@@ -148,6 +154,7 @@ class StoryVideoState extends State<StoryVideo> {
           height: 70,
           child: CircularProgressIndicator(
             strokeWidth: 3,
+            color: Colors.white,
           ),
         ),
       );
@@ -168,6 +175,7 @@ class StoryVideoState extends State<StoryVideo> {
           fit: BoxFit.cover,
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             child: getContentView(),
           ),
         ),
