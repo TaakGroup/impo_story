@@ -141,10 +141,14 @@ class StoryVideoState extends State<StoryVideo> {
 
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success && playerController!.value.isInitialized) {
-      return Center(
-        child: AspectRatio(
-          aspectRatio: playerController!.value.aspectRatio,
-          child: VideoPlayer(playerController!),
+      return SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.height * playerController!.value.aspectRatio,
+        child: Center(
+          child: AspectRatio(
+            aspectRatio: playerController!.value.aspectRatio,
+            child: VideoPlayer(playerController!),
+          ),
         ),
       );
     } else if (widget.videoLoader.state == LoadState.loading) {
@@ -173,11 +177,7 @@ class StoryVideoState extends State<StoryVideo> {
         maxHeight: double.infinity,
         child: FittedBox(
           fit: BoxFit.cover,
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: getContentView(),
-          ),
+          child: getContentView(),
         ),
       ),
     );
