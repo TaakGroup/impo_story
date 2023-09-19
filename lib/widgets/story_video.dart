@@ -17,7 +17,9 @@ class VideoLoader {
 
   LoadState state = LoadState.loading;
 
-  VideoLoader(this.url, {this.requestHeaders});
+  final StreamController<LoadStateEvent> streamController;
+
+  VideoLoader(this.url, this.streamController, {this.requestHeaders});
 
   void loadVideo(VoidCallback onComplete) {
     if (this.videoFile != null) {
@@ -27,15 +29,21 @@ class VideoLoader {
 
     final fileStream = DefaultCacheManager().getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
 
-    fileStream.listen((fileResponse) {
-      if (fileResponse is FileInfo) {
-        if (this.videoFile == null) {
-          this.state = LoadState.success;
-          this.videoFile = fileResponse.file;
-          onComplete();
+    fileStream.listen(
+      (fileResponse) {
+        if (fileResponse is FileInfo) {
+          if (this.videoFile == null) {
+            this.state = LoadState.success;
+            streamController.sink.add(LoadStateEvent(LoadState.success, () => loadVideo(onComplete)));
+            this.videoFile = fileResponse.file;
+            onComplete();
+          }
         }
-      }
-    }, onError: (_) {});
+      },
+      onError: (_) {
+        streamController.sink.add(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete)));
+      },
+    );
   }
 }
 
@@ -62,7 +70,7 @@ class StoryVideo extends StatefulWidget {
     Key? key,
   }) {
     return StoryVideo(
-      VideoLoader(url, requestHeaders: requestHeaders),
+      VideoLoader(url, streamController, requestHeaders: requestHeaders),
       streamController,
       storyController: controller,
       key: key,
@@ -72,7 +80,7 @@ class StoryVideo extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return StoryVideoState(streamController);
+    return StoryVideoState();
   }
 }
 
@@ -82,10 +90,6 @@ class StoryVideoState extends State<StoryVideo> {
   StreamSubscription? _streamSubscription;
 
   VideoPlayerController? playerController;
-
-  final StreamController<LoadStateEvent> streamController;
-
-  StoryVideoState(this.streamController);
 
   initializeVideo() {
     widget.storyController!.pause();
@@ -123,7 +127,6 @@ class StoryVideoState extends State<StoryVideo> {
 
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success && playerController!.value.isInitialized) {
-      streamController.sink.add(LoadStateEvent(LoadState.success, null));
       return Center(
         child: AspectRatio(
           aspectRatio: playerController!.value.aspectRatio,
@@ -131,20 +134,17 @@ class StoryVideoState extends State<StoryVideo> {
         ),
       );
     } else if (widget.videoLoader.state == LoadState.loading) {
-      streamController.sink.add(LoadStateEvent(LoadState.loading, null));
       return Center(
         child: Container(
           width: 70,
           height: 70,
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             strokeWidth: 3,
           ),
         ),
       );
     } else {
       // if (widget.videoLoader.state == LoadState.failure)
-      streamController.sink.add(LoadStateEvent(LoadState.failure, initializeVideo));
       return SizedBox();
     }
   }

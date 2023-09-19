@@ -819,30 +819,29 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               stream: _currentView.state,
               builder: (_, snapShot) {
                 if (snapShot.data?.loadState == LoadState.failure) {
-                  return Positioned.fill(
-                    child: Center(
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            widget.failureIcon ?? SizedBox(),
-                            Text(
-                              "برقراری ارتباط امکان پذیر نیست",
-                              style: widget.errorTextStyle?.copyWith(color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 16,
-                              width: double.infinity,
-                            ),
-                            OutlinedButton(
-                              onPressed: () => snapShot.data?.retry?.call(),
-                              style: widget.retryButtonStyle,
-                              child: Text('تلاش مجدد'),
-                            )
-                          ],
-                        ),
+                  return Center(
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          widget.failureIcon ?? SizedBox(),
+                          Text(
+                            "برقراری ارتباط امکان پذیر نیست",
+                            style: widget.errorTextStyle?.copyWith(color: Colors.white),
+                          ),
+                          SizedBox(
+                            height: 16,
+                            width: double.infinity,
+                          ),
+                          OutlinedButton(
+                            onPressed: () => snapShot.data?.retry?.call(),
+                            style: widget.retryButtonStyle,
+                            child: Text('تلاش مجدد'),
+                          )
+                        ],
                       ),
                     ),
                   );

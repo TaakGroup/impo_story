@@ -35,7 +35,7 @@ class ImageLoader {
     final fileStream = DefaultCacheManager().getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen(
-          (fileResponse) {
+      (fileResponse) {
         if (!(fileResponse is FileInfo)) return;
         // the reason for this is that, when the cache manager fetches
         // the image again from network, the provided `onComplete` should
@@ -60,6 +60,7 @@ class ImageLoader {
       },
       onError: (error) {
         this.state = LoadState.failure;
+        streamController.sink.add(LoadStateEvent(LoadState.failure, () => loadImage(onComplete)));
         onComplete();
       },
     );
@@ -78,15 +79,18 @@ class StoryImage extends StatefulWidget {
 
   final StoryController? controller;
 
-  StoryImage(this.imageLoader, {
+  StoryImage(
+    this.imageLoader, {
     Key? key,
     this.controller,
     this.fit,
-    this.errorTextStyle, this.retryButtonStyle,
+    this.errorTextStyle,
+    this.retryButtonStyle,
   }) : super(key: key ?? UniqueKey());
 
   /// Use this shorthand to fetch images/gifs from the provided [url]
-  factory StoryImage.url(String url, {
+  factory StoryImage.url(
+    String url, {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
