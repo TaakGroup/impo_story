@@ -707,6 +707,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    widget.leading,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -720,7 +721,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         ),
                       ],
                     ),
-                    widget.leading
                   ],
                 ),
               ),
