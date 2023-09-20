@@ -703,7 +703,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               height: 160,
               left: 16,
               child: Directionality(
-                textDirection: TextDirection.rtl,
+                textDirection: TextDirection.ltr,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
