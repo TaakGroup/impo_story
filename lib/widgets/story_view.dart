@@ -660,10 +660,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         color: Colors.white,
         child: Stack(
           children: <Widget>[
-            Directionality(
-              textDirection: TextDirection.rtl,
-              child: _currentView.view,
-            ),
+            _currentView.view,
             if (widget.showShadow)
               Positioned(
                 top: 0,
@@ -740,20 +737,23 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       horizontal: 16,
                       vertical: 8,
                     ),
-                    child: PageBar(
-                      widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
-                      this._currentAnimation,
-                      key: UniqueKey(),
-                      indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
-                      indicatorColor: widget.indicatorColor,
-                      indicatorForegroundColor: widget.indicatorForegroundColor,
+                    child: Transform.rotate(
+                      angle: 2.0 * pi,
+                      child: PageBar(
+                        widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
+                        this._currentAnimation,
+                        key: UniqueKey(),
+                        indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
+                        indicatorColor: widget.indicatorColor,
+                        indicatorForegroundColor: widget.indicatorForegroundColor,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.centerLeft,
               heightFactor: 1,
               child: GestureDetector(
                 onTapDown: (details) {
@@ -805,7 +805,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               ),
             ),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.centerRight,
               heightFactor: 1,
               child: SizedBox(
                 child: GestureDetector(
@@ -854,19 +854,24 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               bottom: 24,
               left: 0,
               right: 0,
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: _currentView.cta,
+              child: Obx(() {
+                if (_currentView.state.value.loadState == LoadState.failure)
+                  return Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: _currentView.cta,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  );
+                else
+                  return SizedBox();
+              }),
             ),
           ],
         ),
