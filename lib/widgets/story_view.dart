@@ -738,7 +738,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       vertical: 8,
                     ),
                     child: Transform.rotate(
-                      angle: 2.0 * pi,
+                      angle: pi,
                       child: PageBar(
                         widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
                         this._currentAnimation,
