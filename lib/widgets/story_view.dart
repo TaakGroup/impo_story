@@ -440,6 +440,8 @@ class StoryView extends StatefulWidget {
 
   final Widget? failureIcon;
 
+  final EdgeInsets? profilePadding;
+
   StoryView({
     required this.storyItems,
     required this.controller,
@@ -458,7 +460,7 @@ class StoryView extends StatefulWidget {
     required this.showShadow,
     this.errorTextStyle,
     this.retryButtonStyle,
-    this.failureIcon,
+    this.failureIcon, this.profilePadding,
   });
 
   @override
@@ -699,32 +701,35 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            // Positioned(
-            //   height: 160,
-            //   left: 16,
-            //   child: Directionality(
-            //     textDirection: TextDirection.rtl,
-            //     child: Row(
-            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //       children: [
-            //         Row(
-            //           mainAxisAlignment: MainAxisAlignment.start,
-            //           children: [
-            //             CircleAvatar(
-            //               radius: 14,
-            //               child: widget.avatar,
-            //             ),
-            //             const SizedBox(width: 8),
-            //             widget.title,
-            //             const SizedBox(width: 2),
-            //             widget.mark,
-            //           ],
-            //         ),
-            //         widget.leading,
-            //       ],
-            //     ),
-            //   ),
-            // ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Padding(
+                  padding: profilePadding ?? EdgeInsets.only(top: 160, right: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 14,
+                            child: widget.avatar,
+                          ),
+                          const SizedBox(width: 8),
+                          widget.title,
+                          const SizedBox(width: 2),
+                          widget.mark,
+                        ],
+                      ),
+                      widget.leading,
+                    ],
+                  ),
+                ),
+              ),
+            ),
             Visibility(
               visible: widget.progressPosition != ProgressPosition.none,
               child: Align(
