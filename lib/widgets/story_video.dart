@@ -52,42 +52,41 @@ class StoryVideoState extends State<StoryVideo> {
   VideoPlayerController? playerController;
 
   initializeVideo() {
+    bool videoMutex = false;
     widget.storyController!.pause();
-    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
-    setState(() {});
+    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.loading)));
 
     this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
-    playerController!.initialize().then(
-      (v) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
-        setState(() {});
-        widget.storyController!.play();
-      },
-      onError: (_) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.failure, initializeVideo)));
-        setState(() {});
-      }
-    );
+    playerController!.initialize().then((v) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
+      widget.storyController!.play();
+    }, onError: (_) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.failure, initializeVideo)));
+    });
 
     playerController?.addListener(() {
       if (this.playerController?.value.isPlaying ?? false) {
         if (widget.storyController?.playbackNotifier.isPaused ?? false) {
           widget.storyController!.play();
+          videoMutex = true;
         }
       } else {
         if (!(widget.storyController?.playbackNotifier.isPaused ?? true)) {
           widget.storyController!.pause();
+          videoMutex = true;
         }
       }
     });
 
     if (widget.storyController != null) {
       _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
-        if (playbackState == PlaybackState.pause) {
-          playerController!.pause();
-        } else {
-          playerController!.play();
+        if (videoMutex) {
+          if (playbackState == PlaybackState.pause) {
+            playerController!.pause();
+          } else {
+            playerController!.play();
+          }
         }
       });
     }
@@ -100,27 +99,31 @@ class StoryVideoState extends State<StoryVideo> {
   }
 
   Widget getContentView() {
-    if (widget.state.value.loadState == LoadState.success) {
-      return Center(
-        child: AspectRatio(
-          aspectRatio: playerController!.value.aspectRatio,
-          child: VideoPlayer(playerController!),
-        ),
-      );
-    } else if (widget.state.value.loadState == LoadState.loading) {
-      return Center(
-        child: Container(
-          width: 70,
-          height: 70,
-          child: CircularProgressIndicator(
-            strokeWidth: 3,
-            color: Colors.white,
-          ),
-        ),
-      );
-    } else {
-      return SizedBox();
-    }
+    return Obx(
+      () {
+        if (widget.state.value.loadState == LoadState.success) {
+          return Center(
+            child: AspectRatio(
+              aspectRatio: playerController!.value.aspectRatio,
+              child: VideoPlayer(playerController!),
+            ),
+          );
+        } else if (widget.state.value.loadState == LoadState.loading) {
+          return Center(
+            child: Container(
+              width: 70,
+              height: 70,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: Colors.white,
+              ),
+            ),
+          );
+        } else {
+          return SizedBox();
+        }
+      },
+    );
   }
 
   @override
