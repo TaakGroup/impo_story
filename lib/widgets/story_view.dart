@@ -284,7 +284,7 @@ class StoryItem {
       model,
       loadEvent,
       shown: shown,
-      duration: duration ?? Duration(seconds: 10),
+      duration: duration ?? Duration(seconds: 15),
     );
   }
 
