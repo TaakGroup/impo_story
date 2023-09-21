@@ -52,7 +52,7 @@ class StoryVideoState extends State<StoryVideo> {
   VideoPlayerController? playerController;
 
   initializeVideo() {
-    bool videoMutex = false;
+    bool isBuffering = false;
     widget.storyController!.pause();
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.loading)));
 
@@ -67,25 +67,32 @@ class StoryVideoState extends State<StoryVideo> {
 
     playerController?.addListener(() {
       if (this.playerController?.value.isPlaying ?? false) {
+        // Video played
         if (widget.storyController?.playbackNotifier.isPaused ?? false) {
+          // if story Paused
           widget.storyController!.play();
-          videoMutex = true;
+          isBuffering = false;
         }
       } else {
+        // Video paused
         if (!(widget.storyController?.playbackNotifier.isPaused ?? true)) {
+          // if story is played
           widget.storyController!.pause();
-          videoMutex = true;
+          isBuffering = true;
         }
       }
     });
 
     if (widget.storyController != null) {
       _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
-        if (videoMutex) {
-          if (playbackState == PlaybackState.pause) {
-            playerController!.pause();
-          } else {
-            playerController!.play();
+        if (playbackState == PlaybackState.pause) {
+          // Story paused
+          if (!isBuffering) {
+            playerController!.pause(); // video paused
+          }
+        } else {
+          if (!isBuffering) {
+            playerController!.play(); // video played
           }
         }
       });
