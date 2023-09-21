@@ -94,16 +94,16 @@ class StoryVideoState extends State<StoryVideo> {
         if (playbackState == PlaybackState.pause) {
           print('7'*100);
           // Story paused
-          if (!isBuffering) {
+          // if (!isBuffering)
             print('8'*100);
             playerController!.pause(); // video paused
-          }
+
         } else {
           print('9'*100);
-          if (!isBuffering) {
+          // if (!isBuffering)
             print('10'*100);
             playerController!.play(); // video played
-          }
+
         }
       });
     }
