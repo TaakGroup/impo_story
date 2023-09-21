@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
@@ -52,12 +53,12 @@ class StoryVideoState extends State<StoryVideo> {
 
   initializeVideo() {
     widget.storyController!.pause();
-    widget.state.value = LoadStateEvent(LoadState.loading);
+    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.loading)));
 
     this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
     playerController!.initialize().then((v) {
-      widget.state.value = LoadStateEvent(LoadState.success);
+      SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
       setState(() {});
       widget.storyController!.play();
     });
