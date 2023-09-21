@@ -112,8 +112,15 @@ class StoryVideoState extends State<StoryVideo> {
 
 
         playerController?.addListener(() {
-          print(this.playerController?.value.isPlaying);
-          print('S' * 100);
+          if(this.playerController?.value.isPlaying ?? false) {
+            if(widget.storyController?.playbackNotifier.isPaused ?? false) {
+              widget.storyController!.play();
+            }
+          } else  {
+            if(!(widget.storyController?.playbackNotifier.isPaused ?? true)) {
+              widget.storyController!.pause();
+            }
+          }
         });
 
         if (widget.storyController != null) {
