@@ -53,7 +53,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   initializeVideo() {
     widget.storyController!.pause();
-    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.loading)));
+    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.failure)));
     setState(() {});
 
     this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
