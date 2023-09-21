@@ -99,9 +99,11 @@ class StoryVideoState extends State<StoryVideo> {
             } // video paused
           } else {
             print('9' * 100);
-            // if (!isBuffering)
-            print('10' * 100);
-            playerController!.play(); // video played
+            if (!isBuffering) {
+              print('10' * 100);
+              widget.storyController!.pause();
+              playerController!.play(); // video played
+            }
           }
         });
       }
