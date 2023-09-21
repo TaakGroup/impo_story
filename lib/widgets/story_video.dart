@@ -59,34 +59,36 @@ class StoryVideoState extends State<StoryVideo> {
     this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
     playerController!.initialize().then((v) {
+      playerController!.addListener(() {
+        print('1'*100);
+        if (this.playerController!.value.isPlaying) {
+          print('2'*100);
+          // Video played
+          if (widget.storyController!.playbackNotifier.isPaused) {
+            print('3'*100);
+            // if story Paused
+            widget.storyController!.play();
+            isBuffering = false;
+          }
+        } else {
+          print('4'*100);
+          // Video paused
+          if (!(widget.storyController!.playbackNotifier.isPaused)) {
+            print('5'*100);
+            // if story is played
+            widget.storyController!.pause();
+            isBuffering = true;
+          }
+        }
+      });
+
       SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
       widget.storyController!.play();
     }, onError: (_) {
       SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.failure, initializeVideo)));
     });
 
-    playerController?.addListener(() {
-      print('1'*100);
-      if (this.playerController?.value.isPlaying ?? false) {
-        print('2'*100);
-        // Video played
-        if (widget.storyController?.playbackNotifier.isPaused ?? false) {
-          print('3'*100);
-          // if story Paused
-          widget.storyController!.play();
-          isBuffering = false;
-        }
-      } else {
-        print('4'*100);
-        // Video paused
-        if (!(widget.storyController?.playbackNotifier.isPaused ?? true)) {
-          print('5'*100);
-          // if story is played
-          widget.storyController!.pause();
-          isBuffering = true;
-        }
-      }
-    });
+
 
     if (widget.storyController != null) {
       _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
