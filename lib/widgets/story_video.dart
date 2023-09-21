@@ -57,11 +57,16 @@ class StoryVideoState extends State<StoryVideo> {
 
     this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
-    playerController!.initialize().then((v) {
-      SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
-      setState(() {});
-      widget.storyController!.play();
-    });
+    playerController!.initialize().then(
+      (v) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
+        setState(() {});
+        widget.storyController!.play();
+      },
+      onError: (_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.failure, initializeVideo)));
+      }
+    );
 
     playerController?.addListener(() {
       if (this.playerController?.value.isPlaying ?? false) {
