@@ -66,16 +66,21 @@ class StoryVideoState extends State<StoryVideo> {
     });
 
     playerController?.addListener(() {
+      print('1'*100);
       if (this.playerController?.value.isPlaying ?? false) {
+        print('2'*100);
         // Video played
         if (widget.storyController?.playbackNotifier.isPaused ?? false) {
+          print('3'*100);
           // if story Paused
           widget.storyController!.play();
           isBuffering = false;
         }
       } else {
+        print('4'*100);
         // Video paused
         if (!(widget.storyController?.playbackNotifier.isPaused ?? true)) {
+          print('5'*100);
           // if story is played
           widget.storyController!.pause();
           isBuffering = true;
@@ -85,13 +90,18 @@ class StoryVideoState extends State<StoryVideo> {
 
     if (widget.storyController != null) {
       _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
+        print('6'*100);
         if (playbackState == PlaybackState.pause) {
+          print('7'*100);
           // Story paused
           if (!isBuffering) {
+            print('8'*100);
             playerController!.pause(); // video paused
           }
         } else {
+          print('9'*100);
           if (!isBuffering) {
+            print('10'*100);
             playerController!.play(); // video played
           }
         }
