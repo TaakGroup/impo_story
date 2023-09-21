@@ -861,7 +861,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               left: 0,
               right: 0,
               child: Obx(() {
-                if (_currentView.state.value.loadState == LoadState.failure)
+                if (_currentView.state.value.loadState == LoadState.success)
                   return Directionality(
                     textDirection: TextDirection.rtl,
                     child: Row(
