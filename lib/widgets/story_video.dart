@@ -1,71 +1,23 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
 import '../utils.dart';
 import '../controller/story_controller.dart';
 
-class VideoLoader {
-  String url;
-
-  File? videoFile;
-
-  Map<String, dynamic>? requestHeaders;
-
-  LoadState state = LoadState.loading;
-
-  final Rx<LoadStateEvent> loadEvent;
-
-  VideoLoader(this.url, this.loadEvent, {this.requestHeaders});
-
-  void loadVideo(VoidCallback onComplete) {
-    this.state = LoadState.loading;
-    SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.loading)));
-    onComplete();
-
-    if (this.videoFile != null) {
-      this.state = LoadState.success;
-      SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.success)));
-      onComplete();
-    }
-
-    final fileStream = DefaultCacheManager().getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
-
-    fileStream.listen(
-      (fileResponse) {
-        if (fileResponse is FileInfo) {
-          if (this.videoFile == null) {
-            this.state = LoadState.success;
-            SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.success)));
-            this.videoFile = fileResponse.file;
-            onComplete();
-          }
-        }
-      },
-      onError: (_) {
-        this.state = LoadState.failure;
-        SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.failure, () => loadVideo(onComplete))));
-        onComplete();
-      },
-    );
-  }
-}
-
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
-  final VideoLoader videoLoader;
   final TextStyle? errorTextStyle;
+  final String videoUrl;
+  final Rx<LoadStateEvent> state;
 
   StoryVideo(
-    this.videoLoader, {
+    this.videoUrl, {
     this.storyController,
-    Key? key,
+    required this.state,
     this.errorTextStyle,
+    Key? key,
   }) : super(key: key ?? UniqueKey());
 
   static StoryVideo url(
@@ -73,14 +25,15 @@ class StoryVideo extends StatefulWidget {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     TextStyle? errorTextStyle,
-    required Rx<LoadStateEvent> loadEvent,
+    required Rx<LoadStateEvent> state,
     Key? key,
   }) {
     return StoryVideo(
-      VideoLoader(url, loadEvent, requestHeaders: requestHeaders),
+      url,
       storyController: controller,
-      key: key,
+      state: state,
       errorTextStyle: errorTextStyle,
+      key: key,
     );
   }
 
@@ -99,61 +52,54 @@ class StoryVideoState extends State<StoryVideo> {
 
   initializeVideo() {
     widget.storyController!.pause();
+    widget.state.value = LoadStateEvent(LoadState.loading);
 
-    widget.videoLoader.loadVideo(() {
-      if (widget.videoLoader.state == LoadState.success) {
-        // this.playerController = VideoPlayerController.file(widget.videoLoader.videoFile!);
-        this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoLoader.url));
+    this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
-        playerController!.initialize().then((v) {
-          setState(() {});
+    playerController!.initialize().then((v) {
+      widget.state.value = LoadStateEvent(LoadState.success);
+      setState(() {});
+      widget.storyController!.play();
+    });
+
+    playerController?.addListener(() {
+      if (this.playerController?.value.isPlaying ?? false) {
+        if (widget.storyController?.playbackNotifier.isPaused ?? false) {
           widget.storyController!.play();
-        });
-
-
-        playerController?.addListener(() {
-          if(this.playerController?.value.isPlaying ?? false) {
-            if(widget.storyController?.playbackNotifier.isPaused ?? false) {
-              widget.storyController!.play();
-            }
-          } else  {
-            if(!(widget.storyController?.playbackNotifier.isPaused ?? true)) {
-              widget.storyController!.pause();
-            }
-          }
-        });
-
-        if (widget.storyController != null) {
-          _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
-            if (playbackState == PlaybackState.pause) {
-              playerController!.pause();
-            } else {
-              playerController!.play();
-            }
-          });
         }
       } else {
-        setState(() {});
+        if (!(widget.storyController?.playbackNotifier.isPaused ?? true)) {
+          widget.storyController!.pause();
+        }
       }
     });
+
+    if (widget.storyController != null) {
+      _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
+        if (playbackState == PlaybackState.pause) {
+          playerController!.pause();
+        } else {
+          playerController!.play();
+        }
+      });
+    }
   }
 
   @override
   void initState() {
     super.initState();
-
     initializeVideo();
   }
 
   Widget getContentView() {
-    if (widget.videoLoader.state == LoadState.success && playerController!.value.isInitialized) {
+    if (widget.state.value == LoadState.success && playerController!.value.isInitialized) {
       return Center(
         child: AspectRatio(
           aspectRatio: playerController!.value.aspectRatio,
           child: VideoPlayer(playerController!),
         ),
       );
-    } else if (widget.videoLoader.state == LoadState.loading) {
+    } else if (widget.state.value == LoadState.loading) {
       return Center(
         child: Container(
           width: 70,
@@ -165,7 +111,6 @@ class StoryVideoState extends State<StoryVideo> {
         ),
       );
     } else {
-      // if (widget.videoLoader.state == LoadState.failure)
       return SizedBox();
     }
   }

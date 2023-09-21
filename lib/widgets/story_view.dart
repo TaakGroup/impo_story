@@ -275,7 +275,7 @@ class StoryItem {
         color: Colors.black,
         child: StoryVideo.url(
           url,
-          loadEvent: loadEvent,
+          state: loadEvent,
           controller: controller,
           requestHeaders: requestHeaders,
         ),
