@@ -99,7 +99,6 @@ class StoryVideoState extends State<StoryVideo> {
             } // video paused
           } else {
             print('9' * 100);
-            print('10' * 100);
             playerController!.play(); // video played
           }
         });
