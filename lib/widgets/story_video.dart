@@ -98,11 +98,9 @@ class StoryVideoState extends State<StoryVideo> {
   VideoPlayerController? playerController;
 
   initializeVideo() {
-    print('F' * 100);
     widget.storyController!.pause();
 
     widget.videoLoader.loadVideo(() {
-      print('A' * 100);
       if (widget.videoLoader.state == LoadState.success) {
         this.playerController = VideoPlayerController.file(widget.videoLoader.videoFile!);
 

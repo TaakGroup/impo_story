@@ -701,36 +701,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            Positioned(
-              top: 0,
-              right: 0,
-              left: 0,
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Padding(
-                  padding: widget.profilePadding ?? EdgeInsets.only(top: 80, right: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 14,
-                            child: widget.avatar,
-                          ),
-                          const SizedBox(width: 8),
-                          widget.title,
-                          const SizedBox(width: 2),
-                          widget.mark,
-                        ],
-                      ),
-                      widget.leading,
-                    ],
-                  ),
-                ),
-              ),
-            ),
             Visibility(
               visible: widget.progressPosition != ProgressPosition.none,
               child: Align(
@@ -857,7 +827,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               },
             ),
             Positioned(
-              bottom: 24,
+              bottom: 32,
               left: 0,
               right: 0,
               child: Obx(() {
@@ -878,6 +848,36 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 else
                   return SizedBox();
               }),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              left: 0,
+              child: Directionality(
+                textDirection: TextDirection.rtl,
+                child: Padding(
+                  padding: widget.profilePadding ?? EdgeInsets.only(top: 80, right: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 14,
+                            child: widget.avatar,
+                          ),
+                          const SizedBox(width: 8),
+                          widget.title,
+                          const SizedBox(width: 2),
+                          widget.mark,
+                        ],
+                      ),
+                      widget.leading,
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
