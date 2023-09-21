@@ -10,6 +10,7 @@ class StoryListView extends StatelessWidget {
   final double coverSize;
   final double spacing;
   final EdgeInsetsGeometry? padding;
+  final double visitedOpacity;
 
   const StoryListView({
     required this.stories,
@@ -19,7 +20,9 @@ class StoryListView extends StatelessWidget {
     required this.onStoryPressed,
     this.height = 100,
     this.coverSize = 64,
-    this.spacing = 16, this.padding,
+    this.spacing = 16,
+    this.padding,
+    this.visitedOpacity = 0.5,
   });
 
   @override
@@ -42,6 +45,7 @@ class StoryListView extends StatelessWidget {
             viewedColor: viewedColor,
             textStyle: textStyle,
             size: coverSize,
+            visitedOpacity: visitedOpacity,
           ),
         ),
       ),
@@ -56,6 +60,7 @@ class StoryItemWidget extends StatelessWidget {
   final TextStyle? textStyle;
   final Color viewedColor, notViewedColor;
   final double size;
+  final double visitedOpacity;
 
   const StoryItemWidget({
     this.onTap,
@@ -65,6 +70,7 @@ class StoryItemWidget extends StatelessWidget {
     required this.viewedColor,
     required this.notViewedColor,
     required this.size,
+    this.visitedOpacity = 0.5,
   });
 
   @override
@@ -84,13 +90,16 @@ class StoryItemWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(color: story.isViewed ? viewedColor : notViewedColor),
               ),
-              child: Container(
-                width: size - 1.5,
-                height: size - 1.5,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: NetworkImage(story.coverImage),
+              child: Opacity(
+                opacity: story.isViewed ? visitedOpacity : 1,
+                child: Container(
+                  width: size - 1.5,
+                  height: size - 1.5,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: NetworkImage(story.coverImage),
+                    ),
                   ),
                 ),
               ),

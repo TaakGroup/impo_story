@@ -699,33 +699,32 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-            Positioned(
-              height: 160,
-              left: 16,
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          radius: 14,
-                          child: widget.avatar,
-                        ),
-                        const SizedBox(width: 8),
-                        widget.title,
-                        const SizedBox(width: 2),
-                        widget.mark,
-                      ],
-                    ),
-                    widget.leading,
-                  ],
-                ),
-              ),
-            ),
+            // Positioned(
+            //   height: 160,
+            //   left: 16,
+            //   child: Directionality(
+            //     textDirection: TextDirection.rtl,
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //       children: [
+            //         Row(
+            //           mainAxisAlignment: MainAxisAlignment.start,
+            //           children: [
+            //             CircleAvatar(
+            //               radius: 14,
+            //               child: widget.avatar,
+            //             ),
+            //             const SizedBox(width: 8),
+            //             widget.title,
+            //             const SizedBox(width: 2),
+            //             widget.mark,
+            //           ],
+            //         ),
+            //         widget.leading,
+            //       ],
+            //     ),
+            //   ),
+            // ),
             Visibility(
               visible: widget.progressPosition != ProgressPosition.none,
               child: Align(
