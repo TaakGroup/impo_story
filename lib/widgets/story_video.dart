@@ -100,7 +100,6 @@ class StoryVideoState extends State<StoryVideo> {
           } else {
             print('9' * 100);
             print('10' * 100);
-            widget.storyController!.pause();
             playerController!.play(); // video played
           }
         });
