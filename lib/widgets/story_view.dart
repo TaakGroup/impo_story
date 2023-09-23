@@ -245,7 +245,7 @@ class StoryItem {
       return StoryItem.pageImage(
         url: image!.url,
         model: storyModel,
-        imageFit: BoxFit.cover,
+        imageFit: BoxFit.none,
         duration: Duration(milliseconds: storyModel.duration),
         controller: controller,
         cta: ctaWidget,
@@ -562,6 +562,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.onStoryShow!(storyItem.storyModel);
     }
 
+    print(storyItem.duration);
+    print('-'*50);
     _animationController = AnimationController(duration: storyItem.duration, vsync: this);
 
     _animationController!.addStatusListener((status) {
@@ -712,7 +714,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 16,
-                      vertical: 32,
+                      vertical: 16,
                     ),
                     child: Transform.rotate(
                       angle: pi,
@@ -739,7 +741,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   child: Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 16,
-                      vertical: 48,
+                      vertical: 32,
                     ),
                     child: Directionality(
                       textDirection: TextDirection.rtl,
