@@ -44,8 +44,6 @@ class StoryVideo extends StatefulWidget {
   }
 }
 
-enum StoryEvent { none, play, pause }
-
 class StoryVideoState extends State<StoryVideo> {
   Future<void>? playerLoader;
   StreamSubscription? _streamSubscription;
@@ -103,8 +101,8 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   void initState() {
-    super.initState();
     initializeVideo();
+    super.initState();
   }
 
   Widget getContentView() {
