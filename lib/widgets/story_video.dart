@@ -135,28 +135,28 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      width: double.infinity,
-      height: double.infinity,
-      child: getContentView(),
-    );
-
     // return Container(
     //   color: Colors.black,
-    //   child: OverflowBox(
-    //     maxWidth: double.infinity,
-    //     maxHeight: double.infinity,
-    //     child: FittedBox(
-    //       fit: BoxFit.cover,
-    //       child: SizedBox(
-    //         height: MediaQuery.of(context).size.height * 9 / 16,
-    //         width: MediaQuery.of(context).size.width,
-    //         child: getContentView(),
-    //       ),
-    //     ),
-    //   ),
+    //   width: double.infinity,
+    //   height: double.infinity,
+    //   child: getContentView(),
     // );
+
+    return Container(
+      color: Colors.black,
+      child: OverflowBox(
+        maxWidth: double.infinity,
+        maxHeight: double.infinity,
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 9 / 16,
+            width: MediaQuery.of(context).size.width,
+            child: getContentView(),
+          ),
+        ),
+      ),
+    );
   }
 
   @override

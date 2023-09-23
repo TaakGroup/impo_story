@@ -245,7 +245,7 @@ class StoryItem {
       return StoryItem.pageImage(
         url: image!.url,
         model: storyModel,
-        imageFit: BoxFit.fitWidth,
+        imageFit: BoxFit.none,
         duration: Duration(milliseconds: storyModel.duration),
         controller: controller,
         cta: ctaWidget,
@@ -262,7 +262,7 @@ class StoryItem {
     required StoryModel model,
     Key? key,
     required Duration duration,
-    BoxFit imageFit = BoxFit.fitWidth,
+    BoxFit imageFit = BoxFit.cover,
     Widget? cta,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
