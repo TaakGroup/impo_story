@@ -58,8 +58,6 @@ class StoryVideoState extends State<StoryVideo> {
     playerController!.initialize().then(
       (v) {
         SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
-        widget.storyController!.play();
-        playerController!.play();
 
         playerController!.addListener(() {
           if (this.playerController!.value.isPlaying) {
@@ -68,6 +66,8 @@ class StoryVideoState extends State<StoryVideo> {
             widget.storyController!.pause();
           }
         });
+
+        playerController!.play();
 
         // if (widget.storyController != null) {
         //   _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {

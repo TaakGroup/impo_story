@@ -560,8 +560,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.onStoryShow!(storyItem.storyModel);
     }
 
-    print(storyItem.duration);
-    print('-'*50);
     _animationController = AnimationController(duration: storyItem.duration, vsync: this);
 
     _animationController!.addStatusListener((status) {
