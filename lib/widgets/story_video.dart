@@ -64,7 +64,7 @@ class StoryVideoState extends State<StoryVideo> {
         playerController!.addListener(() {
           if (this.playerController!.value.isPlaying) {
             widget.storyController!.play();
-          } else {
+          } else if (!this.playerController!.value.isPlaying) {
             widget.storyController!.pause();
           }
         });
