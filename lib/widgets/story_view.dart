@@ -726,11 +726,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                             indicatorForegroundColor: widget.indicatorForegroundColor,
                           ),
                         ),
-                        SizedBox(height: 16),
                         Directionality(
                           textDirection: TextDirection.rtl,
                           child: Padding(
-                            padding: widget.profilePadding ?? EdgeInsets.only(top: 132, right: 16),
+                            padding: widget.profilePadding ?? EdgeInsets.only(right: 16, top: 16),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
