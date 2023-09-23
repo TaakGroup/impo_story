@@ -52,8 +52,6 @@ class StoryVideoState extends State<StoryVideo> {
   VideoPlayerController? playerController;
 
   initializeVideo() {
-    StoryEvent progressEvent = StoryEvent.none;
-    StoryEvent videoEvent = StoryEvent.none;
     widget.storyController!.pause();
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.loading)));
 
@@ -63,6 +61,7 @@ class StoryVideoState extends State<StoryVideo> {
       (v) {
         SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
         widget.storyController!.play();
+        playerController!.play();
 
         playerController!.addListener(() {
           if (this.playerController!.value.isPlaying) {
