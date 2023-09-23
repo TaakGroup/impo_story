@@ -779,7 +779,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   if (_nextDebouncer?.isActive == false) {
                     // widget.controller.play();
                   } else {
-                    // widget.controller.next();
+                    widget.controller.next();
                   }
                 },
                 onVerticalDragStart: widget.onVerticalSwipeComplete == null
