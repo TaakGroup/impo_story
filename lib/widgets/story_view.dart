@@ -713,16 +713,47 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       horizontal: 16,
                       vertical: 32,
                     ),
-                    child: Transform.rotate(
-                      angle: pi,
-                      child: PageBar(
-                        widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
-                        this._currentAnimation,
-                        key: UniqueKey(),
-                        indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
-                        indicatorColor: widget.indicatorColor,
-                        indicatorForegroundColor: widget.indicatorForegroundColor,
-                      ),
+                    child: Column(
+                      children: [
+                        Transform.rotate(
+                          angle: pi,
+                          child: PageBar(
+                            widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
+                            this._currentAnimation,
+                            key: UniqueKey(),
+                            indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
+                            indicatorColor: widget.indicatorColor,
+                            indicatorForegroundColor: widget.indicatorForegroundColor,
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: Padding(
+                            padding: widget.profilePadding ?? EdgeInsets.only(top: 132, right: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 14,
+                                      child: widget.avatar,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    widget.title,
+                                    const SizedBox(width: 2),
+                                    widget.mark,
+                                  ],
+                                ),
+                                widget.leading,
+                              ],
+                            ),
+                          ),
+                        )
+
+                      ],
                     ),
                   ),
                 ),
@@ -743,7 +774,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   if (_nextDebouncer?.isActive == false) {
                     // widget.controller.play();
                   } else {
-                    widget.controller.next();
+                    // widget.controller.next();
                   }
                 },
                 onVerticalDragStart: widget.onVerticalSwipeComplete == null
@@ -848,36 +879,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 else
                   return SizedBox();
               }),
-            ),
-            Positioned(
-              top: 16,
-              right: 0,
-              left: 0,
-              child: Directionality(
-                textDirection: TextDirection.rtl,
-                child: Padding(
-                  padding: widget.profilePadding ?? EdgeInsets.only(top: 132, right: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 14,
-                            child: widget.avatar,
-                          ),
-                          const SizedBox(width: 8),
-                          widget.title,
-                          const SizedBox(width: 2),
-                          widget.mark,
-                        ],
-                      ),
-                      widget.leading,
-                    ],
-                  ),
-                ),
-              ),
             ),
           ],
         ),
