@@ -460,7 +460,8 @@ class StoryView extends StatefulWidget {
     required this.showShadow,
     this.errorTextStyle,
     this.retryButtonStyle,
-    this.failureIcon, this.profilePadding,
+    this.failureIcon,
+    this.profilePadding,
   });
 
   @override
@@ -713,46 +714,54 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       horizontal: 16,
                       vertical: 32,
                     ),
-                    child: Column(
-                      children: [
-                        Transform.rotate(
-                          angle: pi,
-                          child: PageBar(
-                            widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
-                            this._currentAnimation,
-                            key: UniqueKey(),
-                            indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
-                            indicatorColor: widget.indicatorColor,
-                            indicatorForegroundColor: widget.indicatorForegroundColor,
-                          ),
-                        ),
-                        Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: Padding(
-                            padding: widget.profilePadding ?? EdgeInsets.only(right: 16),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Transform.rotate(
+                      angle: pi,
+                      child: PageBar(
+                        widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
+                        this._currentAnimation,
+                        key: UniqueKey(),
+                        indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
+                        indicatorColor: widget.indicatorColor,
+                        indicatorForegroundColor: widget.indicatorForegroundColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Visibility(
+              visible: widget.progressPosition != ProgressPosition.none,
+              child: Align(
+                alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
+                child: SafeArea(
+                  bottom: widget.inline ? false : true,
+                  // we use SafeArea here for notched and bezeles phones
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 32,
+                    ),
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: Padding(
+                        padding: widget.profilePadding ?? EdgeInsets.only(right: 16, top: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 14,
-                                      child: widget.avatar,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    widget.title,
-                                    const SizedBox(width: 2),
-                                    widget.mark,
-                                  ],
-                                ),
-                                widget.leading,
+                                CircleAvatar(radius: 14, child: widget.avatar),
+                                const SizedBox(width: 8),
+                                widget.title,
+                                const SizedBox(width: 2),
+                                widget.mark,
                               ],
                             ),
-                          ),
-                        )
-
-                      ],
+                            widget.leading,
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
