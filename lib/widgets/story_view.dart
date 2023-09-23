@@ -635,7 +635,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       }
     } else {
       // this is the last page, progress animation should skip to end
-      _animationController!.animateTo(1.0, duration: Duration(milliseconds: 10));
+      _animationController!.animateTo(1.0, duration: Duration(milliseconds: 30));
     }
   }
 
@@ -717,7 +717,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       angle: pi,
                       child: PageBar(
                         // widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
-                        widget.storyItems.map((it) => PageData(Duration(seconds: 70), it!.shown)).toList(),
+                        widget.storyItems.map((it) => PageData(Duration(seconds: 30), it!.shown)).toList(),
                         this._currentAnimation,
                         key: UniqueKey(),
                         indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
