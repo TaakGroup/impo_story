@@ -560,7 +560,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.onStoryShow!(storyItem.storyModel);
     }
 
-    _animationController = AnimationController(duration: storyItem.duration, vsync: this);
+    // _animationController = AnimationController(duration: storyItem.duration, vsync: this);
+    _animationController = AnimationController(duration: Duration(seconds: 70), vsync: this);
 
     _animationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -715,7 +716,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                     child: Transform.rotate(
                       angle: pi,
                       child: PageBar(
-                        widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
+                        // widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
+                        widget.storyItems.map((it) => PageData(Duration(seconds: 70), it!.shown)).toList(),
                         this._currentAnimation,
                         key: UniqueKey(),
                         indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
