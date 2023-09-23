@@ -245,7 +245,7 @@ class StoryItem {
       return StoryItem.pageImage(
         url: image!.url,
         model: storyModel,
-        imageFit: BoxFit.none,
+        imageFit: BoxFit.cover,
         duration: Duration(milliseconds: storyModel.duration),
         controller: controller,
         cta: ctaWidget,

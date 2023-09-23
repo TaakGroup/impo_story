@@ -150,8 +150,8 @@ class StoryVideoState extends State<StoryVideo> {
         child: FittedBox(
           fit: BoxFit.cover,
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * 9 / 16,
-            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width * 9 / 16,
             child: getContentView(),
           ),
         ),
