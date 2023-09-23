@@ -44,68 +44,74 @@ class StoryVideo extends StatefulWidget {
   }
 }
 
+enum StoryEvent { none, play, pause }
+
 class StoryVideoState extends State<StoryVideo> {
   Future<void>? playerLoader;
-
   StreamSubscription? _streamSubscription;
-
   VideoPlayerController? playerController;
 
   initializeVideo() {
-    bool isBuffering = false;
+    StoryEvent progressEvent = StoryEvent.none;
+    StoryEvent videoEvent = StoryEvent.none;
     widget.storyController!.pause();
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.loading)));
 
     this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
-    playerController!.initialize().then((v) {
-      SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
-      widget.storyController!.play();
+    playerController!.initialize().then(
+      (v) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
+        widget.storyController!.play();
 
-      playerController!.addListener(() {
-        print('1' * 100);
-        if (this.playerController!.value.isPlaying) {
-          print('2' * 100);
-          // Video played
-          widget.storyController!.play();
-          isBuffering = false;
-          // if (widget.storyController!.playbackNotifier.isPaused) {
-          //   print('3' * 100);
-          //   // if story Paused
-          //   widget.storyController!.play();
-          //   isBuffering = false;
-          // }
-        } else {
-          print('4' * 100);
-          // Video paused
-          if (!(widget.storyController!.playbackNotifier.isPaused)) {
-            print('5' * 100);
-            // if story is played
-            widget.storyController!.pause();
-            isBuffering = true;
-          }
-        }
-      });
-
-      if (widget.storyController != null) {
-        _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
-          print('6' * 100);
-          if (playbackState == PlaybackState.pause) {
-            print('7' * 100);
-            // Story paused
-            if (!isBuffering) {
-              print('8' * 100);
-              playerController!.pause();
-            } // video paused
+        playerController!.addListener(() {
+          if (this.playerController!.value.isPlaying) {
+            // Video played
+            if (progressEvent != StoryEvent.play) {
+              videoEvent = StoryEvent.play;
+              widget.storyController!.play();
+            } else {
+              progressEvent = StoryEvent.none;
+            }
           } else {
-            print('9' * 100);
-            playerController!.play(); // video played
+            // Video paused
+            if (progressEvent != StoryEvent.pause) {
+              videoEvent = StoryEvent.pause;
+              widget.storyController!.pause();
+            } else {
+              progressEvent = StoryEvent.none;
+            }
           }
         });
-      }
-    }, onError: (_) {
-      SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.failure, initializeVideo)));
-    });
+
+        if (widget.storyController != null) {
+          _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
+            if (playbackState == PlaybackState.play) {
+              // Story paused
+              if (videoEvent != StoryEvent.play && videoEvent != StoryEvent.pause) {
+                progressEvent = StoryEvent.play;
+                playerController!.play();
+              }
+
+              if (videoEvent == StoryEvent.pause) {
+                widget.storyController!.pause();
+              }
+
+              // video paused
+            } else if (playbackState == PlaybackState.pause) {
+              // Story played
+              if (videoEvent != StoryEvent.pause) {
+                progressEvent = StoryEvent.pause;
+                playerController!.pause();
+              }
+            }
+          });
+        }
+      },
+      onError: (_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.failure, initializeVideo)));
+      },
+    );
   }
 
   @override

@@ -130,7 +130,7 @@ class StoryItem {
     Widget? cta,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
-    Duration? duration,
+    required Duration duration,
     ButtonStyle? retryButtonStyle,
     TextStyle? errorTextStyle,
   }) {
@@ -154,7 +154,7 @@ class StoryItem {
       model,
       loadEvent,
       shown: shown,
-      duration: duration ?? Duration(seconds: 3),
+      duration: duration,
     );
   }
 
@@ -261,7 +261,7 @@ class StoryItem {
     required StoryController controller,
     required StoryModel model,
     Key? key,
-    Duration? duration,
+    required Duration duration,
     BoxFit imageFit = BoxFit.fitWidth,
     Widget? cta,
     bool shown = false,
@@ -284,7 +284,7 @@ class StoryItem {
       model,
       loadEvent,
       shown: shown,
-      duration: duration ?? Duration(seconds: 15),
+      duration: duration,
     );
   }
 
