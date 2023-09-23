@@ -744,7 +744,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                     child: Directionality(
                       textDirection: TextDirection.rtl,
                       child: Padding(
-                        padding: widget.profilePadding ?? EdgeInsets.only(right: 16, top: 16),
+                        padding: widget.profilePadding ?? EdgeInsets.zero,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
