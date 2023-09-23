@@ -161,7 +161,6 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   void dispose() {
-    playerController?.pause();
     playerController?.dispose();
     _streamSubscription?.cancel();
     super.dispose();
