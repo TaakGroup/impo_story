@@ -62,6 +62,8 @@ class StoryVideoState extends State<StoryVideo> {
         playerController!.play();
 
         playerController!.addListener(() {
+          print(this.playerController!.value.isCompleted);
+          print('/'*100);
           if (this.playerController!.value.isPlaying) {
             widget.storyController!.play();
           } else if (!this.playerController!.value.isCompleted) {
