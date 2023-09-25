@@ -58,71 +58,11 @@ class StoryVideoState extends State<StoryVideo> {
     playerController!.initialize().then(
       (v) {
         SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
-
-        playerController!.addListener(() {
-          print(this.playerController!.value.isPlaying);
-          print('-'*100);
-          if (this.playerController!.value.isPlaying) {
-            if (widget.state.value.progressEvent != StoryEvent.play) {
-              widget.storyController!.play();
-              widget.state(StoryPipeline(videoEvent: StoryEvent.play));
-            }
-          } else if (!this.playerController!.value.isCompleted) {
-            if (widget.state.value.progressEvent != StoryEvent.pause) {
-              widget.storyController!.pause();
-              widget.state(StoryPipeline(videoEvent: StoryEvent.pause));
-            }
-          }
-
-          widget.state(StoryPipeline(progressEvent: StoryEvent.none));
-        });
-
-        widget.storyController!.playbackNotifier.listen((value) {
-          print(value);
-          print('-'*100);
-          if (value == PlaybackState.play) {
-            if (widget.state.value.videoEvent != StoryEvent.play) {
-              playerController!.play();
-              widget.state(StoryPipeline(progressEvent: StoryEvent.play));
-            }
-            widget.state(StoryPipeline(videoEvent: StoryEvent.none));
-          } else if (value == PlaybackState.pause) {
-            if (widget.state.value.videoEvent != StoryEvent.pause) {
-              playerController!.pause();
-              widget.state(StoryPipeline(progressEvent: StoryEvent.pause));
-            }
-          }
-        });
-
+        widget.storyController!.attachVideoController(playerController!);
         playerController!.play();
-
-        // if (widget.storyController != null) {
-        //   _streamSubscription = widget.storyController!.playbackNotifier.listen((playbackState) {
-        //     if (playbackState == PlaybackState.play) {
-        //       // Story paused
-        //       if (videoEvent != StoryEvent.play && videoEvent != StoryEvent.pause) {
-        //         progressEvent = StoryEvent.play;
-        //         playerController!.play();
-        //       }
-        //
-        //       if (videoEvent == StoryEvent.pause) {
-        //         widget.storyController!.pause();
-        //       }
-        //
-        //       // video paused
-        //     } else if (playbackState == PlaybackState.pause) {
-        //       // Story played
-        //       if (videoEvent != StoryEvent.pause) {
-        //         progressEvent = StoryEvent.pause;
-        //         playerController!.pause();
-        //       }
-        //     }
-        //   });
-        // }
       },
       onError: (_) {
-        SchedulerBinding.instance
-            .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
       },
     );
   }
@@ -163,13 +103,6 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   Widget build(BuildContext context) {
-    // return Container(
-    //   color: Colors.black,
-    //   width: double.infinity,
-    //   height: double.infinity,
-    //   child: getContentView(),
-    // );
-
     return Container(
       color: Colors.black,
       child: OverflowBox(

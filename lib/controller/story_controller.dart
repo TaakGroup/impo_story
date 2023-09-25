@@ -1,4 +1,5 @@
 import 'package:rxdart/rxdart.dart';
+import 'package:video_player/video_player.dart';
 
 enum PlaybackState { pause, play, next, previous }
 
@@ -10,22 +11,44 @@ enum PlaybackState { pause, play, next, previous }
 class StoryController {
   /// Stream that broadcasts the playback state of the stories.
   final playbackNotifier = BehaviorSubject<PlaybackState>();
+  VideoPlayerController? playerController;
+
+  void attachVideoController(VideoPlayerController playerController) {
+    this.playerController = playerController;
+    this.playerController?.addListener(() {
+      if (playerController.value.isPlaying) {
+        playbackNotifier.add(PlaybackState.play);
+      } else if (playerController.value.isCompleted) {
+        playbackNotifier.add(PlaybackState.pause);
+      }
+    });
+  }
 
   /// Notify listeners with a [PlaybackState.pause] state
   void pause() {
-    playbackNotifier.add(PlaybackState.pause);
+    if (playerController != null) {
+      playerController!.pause();
+    } else {
+      playbackNotifier.add(PlaybackState.pause);
+    }
   }
 
   /// Notify listeners with a [PlaybackState.play] state
   void play() {
-    playbackNotifier.add(PlaybackState.play);
+    if (playerController != null) {
+      playerController!.play();
+    } else {
+      playbackNotifier.add(PlaybackState.play);
+    }
   }
 
   void next() {
+    playerController = null;
     playbackNotifier.add(PlaybackState.next);
   }
 
   void previous() {
+    playerController = null;
     playbackNotifier.add(PlaybackState.previous);
   }
 
