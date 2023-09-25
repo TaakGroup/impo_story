@@ -64,6 +64,7 @@ class StoryVideoState extends State<StoryVideo> {
             widget.storyController!.play();
           } else if (!this.playerController!.value.isCompleted) {
             if(this.playerController!.value.isBuffering) {
+              print('/'*100);
               widget.state(LoadStateEvent(LoadState.buffering));
             }
             widget.storyController!.pause();
