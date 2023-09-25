@@ -67,9 +67,6 @@ class StoryVideoState extends State<StoryVideo> {
               widget.state(StoryPipeline(videoEvent: StoryEvent.play));
             }
           } else if (!this.playerController!.value.isCompleted) {
-            if (this.playerController!.value.isBuffering) {
-              widget.state(StoryPipeline(storyState: StoryState.buffering));
-            }
             if (widget.state.value.progressEvent != StoryEvent.pause) {
               widget.storyController!.pause();
               widget.state(StoryPipeline(progressEvent: StoryEvent.none));
