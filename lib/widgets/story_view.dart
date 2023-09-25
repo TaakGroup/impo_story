@@ -744,6 +744,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       textDirection: TextDirection.rtl,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -754,6 +755,18 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                               const SizedBox(width: 2),
                               widget.mark,
                             ],
+                          ),
+                          SizedBox.square(
+                            dimension: 24,
+                            child: Obx(
+                              () {
+                                if (_currentView.state.value.loadState == LoadState.buffering) {
+                                  return CircularProgressIndicator();
+                                } else {
+                                  return SizedBox();
+                                }
+                              },
+                            ),
                           ),
                           widget.leading,
                         ],

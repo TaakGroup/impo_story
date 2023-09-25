@@ -1,4 +1,4 @@
-enum LoadState { loading, success, failure }
+enum LoadState { loading, buffering, success, failure }
 
 enum Direction { up, down, left, right }
 
