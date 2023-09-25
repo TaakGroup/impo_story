@@ -1,12 +1,16 @@
-enum LoadState { loading, buffering, success, failure }
+enum StoryState { loading, buffering, success, failure }
+
+enum StoryEvent { none, play, pause }
 
 enum Direction { up, down, left, right }
 
-class LoadStateEvent {
-  final LoadState? loadState;
+class StoryPipeline {
+  final StoryState? storyState;
+  StoryEvent? videoEvent = StoryEvent.none;
+  StoryEvent? progressEvent = StoryEvent.none;
   final Function? retry;
 
-  LoadStateEvent([this.loadState, this.retry]);
+  StoryPipeline({this.storyState, this.videoEvent, this.progressEvent,this.retry});
 }
 
 class VerticalDragInfo {

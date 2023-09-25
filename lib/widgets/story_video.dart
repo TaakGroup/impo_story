@@ -11,7 +11,7 @@ class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final TextStyle? errorTextStyle;
   final String videoUrl;
-  final Rx<LoadStateEvent> state;
+  final Rx<StoryPipeline> state;
 
   StoryVideo(
     this.videoUrl, {
@@ -26,7 +26,7 @@ class StoryVideo extends StatefulWidget {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     TextStyle? errorTextStyle,
-    required Rx<LoadStateEvent> state,
+    required Rx<StoryPipeline> state,
     Key? key,
   }) {
     return StoryVideo(
@@ -51,24 +51,43 @@ class StoryVideoState extends State<StoryVideo> {
 
   initializeVideo() {
     widget.storyController!.pause();
-    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.loading)));
+    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
 
     this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
     playerController!.initialize().then(
       (v) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.success)));
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
 
         playerController!.addListener(() {
           if (this.playerController!.value.isPlaying) {
-            widget.storyController!.play();
+            if (widget.state.value.progressEvent != StoryEvent.play) {
+              widget.storyController!.play();
+              widget.state(StoryPipeline(progressEvent: StoryEvent.none));
+            }
           } else if (!this.playerController!.value.isCompleted) {
-            // if(this.playerController!.value) {
-            print(this.playerController!.value);
-              print('/'*100);
-              widget.state(LoadStateEvent(LoadState.buffering));
-            // }
-            widget.storyController!.pause();
+            if (this.playerController!.value.isBuffering) {
+              widget.state(StoryPipeline(storyState: StoryState.buffering));
+            }
+            if (widget.state.value.progressEvent != StoryEvent.pause) {
+              widget.storyController!.pause();
+              widget.state(StoryPipeline(progressEvent: StoryEvent.none));
+            }
+          }
+        });
+
+        widget.storyController!.playbackNotifier.listen((value) {
+          if (value == PlaybackState.play) {
+            if (widget.state.value.videoEvent != StoryEvent.play) {
+              playerController!.play();
+              widget.state(StoryPipeline(progressEvent: StoryEvent.play));
+              widget.state(StoryPipeline(videoEvent: StoryEvent.none));
+            }
+          } else if (value == PlaybackState.pause) {
+            if (widget.state.value.videoEvent != StoryEvent.pause) {
+              playerController!.pause();
+              widget.state(StoryPipeline(progressEvent: StoryEvent.pause));
+            }
           }
         });
 
@@ -99,7 +118,8 @@ class StoryVideoState extends State<StoryVideo> {
         // }
       },
       onError: (_) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(LoadStateEvent(LoadState.failure, initializeVideo)));
+        SchedulerBinding.instance
+            .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
       },
     );
   }
@@ -113,14 +133,14 @@ class StoryVideoState extends State<StoryVideo> {
   Widget getContentView() {
     return Obx(
       () {
-        if (widget.state.value.loadState == LoadState.success) {
+        if (widget.state.value.storyState == StoryState.success) {
           return Center(
             child: AspectRatio(
               aspectRatio: playerController!.value.aspectRatio,
               child: VideoPlayer(playerController!),
             ),
           );
-        } else if (widget.state.value.loadState == LoadState.loading) {
+        } else if (widget.state.value.storyState == StoryState.loading) {
           return Center(
             child: Container(
               width: 70,

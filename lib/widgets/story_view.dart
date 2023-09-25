@@ -45,7 +45,7 @@ class StoryItem {
   final StoryModel storyModel;
 
   // Stream
-  final Rx<LoadStateEvent> state;
+  final Rx<StoryPipeline> state;
 
   StoryItem(
     this.view,
@@ -134,7 +134,7 @@ class StoryItem {
     ButtonStyle? retryButtonStyle,
     TextStyle? errorTextStyle,
   }) {
-    Rx<LoadStateEvent> loadEvent = LoadStateEvent().obs;
+    Rx<StoryPipeline> loadEvent = StoryPipeline().obs;
 
     return StoryItem(
       Container(
@@ -265,7 +265,7 @@ class StoryItem {
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
   }) {
-    Rx<LoadStateEvent> loadEvent = LoadStateEvent().obs;
+    Rx<StoryPipeline> loadEvent = StoryPipeline().obs;
 
     return StoryItem(
       Container(
@@ -754,20 +754,19 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                               widget.title,
                               const SizedBox(width: 2),
                               widget.mark,
-                              SizedBox.square(
-                                dimension: 24,
-                                child: Obx(
-                                  () => _currentView.state.value.loadState == LoadState.buffering
-                                      ? CircularProgressIndicator(
-                                          strokeWidth: 1.0,
-                                          color: Colors.white,
-                                        )
-                                      : SizedBox(),
-                                ),
-                              )
                             ],
                           ),
-
+                          SizedBox.square(
+                            dimension: 24,
+                            child: Obx(
+                              () => _currentView.state.value.storyState == StoryState.buffering
+                                  ? CircularProgressIndicator(
+                                      strokeWidth: 1.0,
+                                      color: Colors.white,
+                                    )
+                                  : SizedBox(),
+                            ),
+                          ),
                           widget.leading,
                         ],
                       ),
@@ -781,15 +780,21 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               heightFactor: 1,
               child: GestureDetector(
                 onTapDown: (details) {
-                  // widget.controller.pause();
+                  if (_currentView.state.value.videoEvent == StoryEvent.none) {
+                    widget.controller.pause();
+                  }
                 },
                 onTapCancel: () {
-                  // widget.controller.play();
+                  if (_currentView.state.value.videoEvent == StoryEvent.none) {
+                    widget.controller.play();
+                  }
                 },
                 onTapUp: (details) {
                   // if debounce timed out (not active) then continue anim
                   if (_nextDebouncer?.isActive == false) {
-                    // widget.controller.play();
+                    if (_currentView.state.value.videoEvent == StoryEvent.none) {
+                      widget.controller.play();
+                    }
                   } else {
                     widget.controller.next();
                   }
@@ -797,12 +802,16 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 onVerticalDragStart: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
-                        // widget.controller.pause();
+                        if (_currentView.state.value.videoEvent == StoryEvent.none) {
+                          widget.controller.pause();
+                        }
                       },
                 onVerticalDragCancel: widget.onVerticalSwipeComplete == null
                     ? null
                     : () {
-                        // widget.controller.play();
+                        if (_currentView.state.value.videoEvent == StoryEvent.none) {
+                          widget.controller.play();
+                        }
                       },
                 onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
                     ? null
@@ -818,7 +827,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 onVerticalDragEnd: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
-                        // widget.controller.play();
+                        if (_currentView.state.value.videoEvent == StoryEvent.none) {
+                          widget.controller.play();
+                        }
                         // finish up drag cycle
                         if (!verticalDragInfo!.cancel && widget.onVerticalSwipeComplete != null) {
                           widget.onVerticalSwipeComplete!(verticalDragInfo!.direction);
@@ -842,7 +853,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             ),
             Obx(
               () {
-                if (_currentView.state.value.loadState == LoadState.failure) {
+                if (_currentView.state.value.storyState == StoryState.failure) {
                   return Directionality(
                     textDirection: TextDirection.rtl,
                     child: Center(
@@ -879,7 +890,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               left: 0,
               right: 0,
               child: Obx(() {
-                if (_currentView.state.value.loadState == LoadState.success)
+                if (_currentView.state.value.storyState == StoryState.success)
                   return Directionality(
                     textDirection: TextDirection.rtl,
                     child: Row(

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
@@ -14,26 +13,26 @@ import '../controller/story_controller.dart';
 class ImageLoader {
   ui.Codec? frames;
 
-  final Rx<LoadStateEvent> loadEvent;
+  final Rx<StoryPipeline> loadEvent;
 
   String url;
 
   Map<String, dynamic>? requestHeaders;
 
-  LoadState state = LoadState.loading; // by default
+  StoryState state = StoryState.loading; // by default
 
   ImageLoader(this.url, this.loadEvent, {this.requestHeaders});
 
   /// Load image from disk cache first, if not found then load from network.
   /// `onComplete` is called when [imageBytes] become available.
   void loadImage(VoidCallback onComplete) {
-    this.state = LoadState.loading;
-    SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.loading)));
+    this.state = StoryState.loading;
+    SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.loading)));
     onComplete();
 
     if (this.frames != null) {
-      this.state = LoadState.success;
-      SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.success)));
+      this.state = StoryState.success;
+      SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.success)));
       onComplete();
     }
 
@@ -53,18 +52,19 @@ class ImageLoader {
 
         PaintingBinding.instance.instantiateImageCodec(imageBytes).then((codec) {
           this.frames = codec;
-          this.state = LoadState.success;
-          SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.success)));
+          this.state = StoryState.success;
+          SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.success)));
           onComplete();
         }, onError: (error) {
-          this.state = LoadState.failure;
-          SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.failure, () => loadImage(onComplete))));
+          this.state = StoryState.failure;
+          SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.failure, retry: () => loadImage(onComplete))));
           onComplete();
         });
       },
       onError: (error) {
-        this.state = LoadState.failure;
-        SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(LoadStateEvent(LoadState.failure, () => loadImage(onComplete))));
+        this.state = StoryState.failure;
+        SchedulerBinding.instance
+            .addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.failure, retry: () => loadImage(onComplete))));
         onComplete();
       },
     );
@@ -100,7 +100,7 @@ class StoryImage extends StatefulWidget {
     BoxFit fit = BoxFit.fitWidth,
     TextStyle? errorTextStyle,
     ButtonStyle? retryButtonStyle,
-    required Rx<LoadStateEvent> loadEvent,
+    required Rx<StoryPipeline> loadEvent,
     Key? key,
   }) {
     return StoryImage(
@@ -147,7 +147,7 @@ class StoryImageState extends State<StoryImage> {
 
     widget.imageLoader.loadImage(() async {
       if (mounted) {
-        if (widget.imageLoader.state == LoadState.success) {
+        if (widget.imageLoader.state == StoryState.success) {
           widget.controller?.play();
           forward();
         } else {
@@ -193,12 +193,12 @@ class StoryImageState extends State<StoryImage> {
 
   Widget getContentView() {
     switch (widget.imageLoader.state) {
-      case LoadState.success:
+      case StoryState.success:
         return RawImage(
           image: this.currentFrame,
           fit: widget.fit,
         );
-      case LoadState.failure:
+      case StoryState.failure:
         return SizedBox();
       default:
         return Center(
