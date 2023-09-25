@@ -80,8 +80,8 @@ class StoryVideoState extends State<StoryVideo> {
             if (widget.state.value.videoEvent != StoryEvent.play) {
               playerController!.play();
               widget.state(StoryPipeline(progressEvent: StoryEvent.play));
-              widget.state(StoryPipeline(videoEvent: StoryEvent.none));
             }
+            widget.state(StoryPipeline(videoEvent: StoryEvent.none));
           } else if (value == PlaybackState.pause) {
             if (widget.state.value.videoEvent != StoryEvent.pause) {
               playerController!.pause();
