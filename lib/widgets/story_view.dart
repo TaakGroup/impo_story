@@ -780,21 +780,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               heightFactor: 1,
               child: GestureDetector(
                 onTapDown: (details) {
-                  if (_currentView.state.value.videoEvent == StoryEvent.none) {
-                    widget.controller.pause();
-                  }
+                  widget.controller.pause();
                 },
                 onTapCancel: () {
-                  if (_currentView.state.value.videoEvent == StoryEvent.none) {
-                    widget.controller.play();
-                  }
+                  widget.controller.play();
                 },
                 onTapUp: (details) {
                   // if debounce timed out (not active) then continue anim
                   if (_nextDebouncer?.isActive == false) {
-                    if (_currentView.state.value.videoEvent == StoryEvent.none) {
-                      widget.controller.play();
-                    }
+                    widget.controller.play();
                   } else {
                     widget.controller.next();
                   }
@@ -802,16 +796,12 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 onVerticalDragStart: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
-                        if (_currentView.state.value.videoEvent == StoryEvent.none) {
-                          widget.controller.pause();
-                        }
+                        widget.controller.pause();
                       },
                 onVerticalDragCancel: widget.onVerticalSwipeComplete == null
                     ? null
                     : () {
-                        if (_currentView.state.value.videoEvent == StoryEvent.none) {
-                          widget.controller.play();
-                        }
+                        widget.controller.play();
                       },
                 onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
                     ? null
@@ -827,9 +817,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 onVerticalDragEnd: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
-                        if (_currentView.state.value.videoEvent == StoryEvent.none) {
-                          widget.controller.play();
-                        }
+                        widget.controller.play();
+
                         // finish up drag cycle
                         if (!verticalDragInfo!.cancel && widget.onVerticalSwipeComplete != null) {
                           widget.onVerticalSwipeComplete!(verticalDragInfo!.direction);
