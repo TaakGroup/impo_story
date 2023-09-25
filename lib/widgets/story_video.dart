@@ -60,7 +60,7 @@ class StoryVideoState extends State<StoryVideo> {
         SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
 
         playerController!.addListener(() {
-          print(this.playerController!.value);
+          print(this.playerController!.value.isPlaying);
           print('-'*100);
           if (this.playerController!.value.isPlaying) {
             if (widget.state.value.progressEvent != StoryEvent.play) {
