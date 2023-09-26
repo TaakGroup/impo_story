@@ -56,12 +56,8 @@ class StoryVideoState extends State<StoryVideo> {
     final fileInfo = await DefaultCacheManager().getFileFromCache(widget.videoUrl);
 
     if (fileInfo != null) {
-      try {
-        print('[VideoControllerService]: Loading video from cache');
-        this.playerController = VideoPlayerController.file(fileInfo.file);
-      } catch (_) {
-        this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
-      }
+      print('[VideoControllerService]: Loading video from cache');
+      this.playerController = VideoPlayerController.file(fileInfo.file);
     } else {
       print('[VideoControllerService]: No video in cache');
       this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
