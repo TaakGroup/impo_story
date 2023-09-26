@@ -674,7 +674,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.25),
+                        Colors.black.withOpacity(0.15),
                         Colors.transparent,
                       ],
                     ),
@@ -693,7 +693,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.black.withOpacity(0.25),
+                        Colors.black.withOpacity(0.15),
                         Colors.transparent,
                       ],
                     ),
@@ -731,7 +731,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 child: Container(
                   padding: EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 16,
+                    vertical: 24,
                   ),
                   child: Directionality(
                     textDirection: TextDirection.rtl,
