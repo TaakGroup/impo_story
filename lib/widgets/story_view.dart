@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:story_view/models/story_events.dart';
@@ -657,239 +658,261 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.ltr,
-      child: Container(
-        color: Colors.white,
-        child: Stack(
-          children: <Widget>[
-            _currentView.view,
-            if (widget.showShadow)
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 56,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(1.0),
+            child: Center(
+              child: AspectRatio(
+                aspectRatio: 1080 / 1920,
                 child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color(0xff31303027).withOpacity(0.15),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            if (widget.showShadow)
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: 56,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [
-                        Color(0xff31303027).withOpacity(0.15),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            Visibility(
-              visible: widget.progressPosition != ProgressPosition.none,
-              child: Align(
-                alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  child: Transform.rotate(
-                    angle: pi,
-                    child: PageBar(
-                      // widget.storyItems.map((it) => PageData(Duration(seconds: 60), it!.shown)).toList(),
-                      widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
-                      this._currentAnimation,
-                      key: UniqueKey(),
-                      indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
-                      indicatorColor: widget.indicatorColor,
-                      indicatorForegroundColor: widget.indicatorForegroundColor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Visibility(
-              visible: widget.progressPosition != ProgressPosition.none,
-              child: Align(
-                alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 28,
-                  ),
-                  child: Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            CircleAvatar(radius: 16, child: widget.avatar),
-                            const SizedBox(width: 8),
-                            widget.title,
-                            const SizedBox(width: 2),
-                            widget.mark,
-                          ],
-                        ),
-                        SizedBox.square(
-                          dimension: 24,
-                          child: Obx(
-                            () => _currentView.state.value.storyState == StoryState.buffering
-                                ? CircularProgressIndicator(
-                                    strokeWidth: 1.0,
-                                    color: Colors.white,
-                                  )
-                                : SizedBox(),
-                          ),
-                        ),
-                        widget.leading,
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerLeft,
-              heightFactor: 1,
-              child: GestureDetector(
-                onTapDown: (details) {
-                  widget.controller.pause();
-                },
-                onTapCancel: () {
-                  widget.controller.play();
-                },
-                onTapUp: (details) {
-                  // if debounce timed out (not active) then continue anim
-                  if (_nextDebouncer?.isActive == false) {
-                    widget.controller.play();
-                  } else {
-                    widget.controller.next();
-                  }
-                },
-                onVerticalDragStart: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        widget.controller.pause();
-                      },
-                onVerticalDragCancel: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : () {
-                        widget.controller.play();
-                      },
-                onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        if (verticalDragInfo == null) {
-                          verticalDragInfo = VerticalDragInfo();
-                        }
-
-                        verticalDragInfo!.update(details.primaryDelta!);
-
-                        // TODO: provide callback interface for animation purposes
-                      },
-                onVerticalDragEnd: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        widget.controller.play();
-
-                        // finish up drag cycle
-                        if (!verticalDragInfo!.cancel && widget.onVerticalSwipeComplete != null) {
-                          widget.onVerticalSwipeComplete!(verticalDragInfo!.direction);
-                        }
-
-                        verticalDragInfo = null;
-                      },
-              ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              heightFactor: 1,
-              child: SizedBox(
-                child: GestureDetector(
-                  onTap: () {
-                    widget.controller.previous();
-                  },
-                ),
-                width: MediaQuery.of(context).size.width / 4,
-              ),
-            ),
-            Obx(
-              () {
-                if (_currentView.state.value.storyState == StoryState.failure) {
-                  return Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Center(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          widget.failureIcon ?? SizedBox(),
-                          Text(
-                            "برقراری ارتباط امکان پذیر نیست",
-                            style: widget.errorTextStyle?.copyWith(color: Colors.white),
-                          ),
-                          SizedBox(
-                            height: 16,
-                            width: double.infinity,
-                          ),
-                          OutlinedButton(
-                            onPressed: () => _currentView.state.value.retry?.call(),
-                            style: widget.retryButtonStyle,
-                            child: Text('تلاش مجدد'),
-                          )
-                        ],
+                  clipBehavior: Clip.antiAlias,
+                  decoration: ShapeDecoration(
+                    shape: SmoothRectangleBorder(
+                      borderRadius: SmoothBorderRadius(
+                        cornerRadius: 12,
+                        cornerSmoothing: 0.6,
                       ),
+
                     ),
-                  );
-                } else {
-                  return SizedBox();
-                }
-              },
-            ),
-            Positioned(
-              bottom: 32,
-              left: 0,
-              right: 0,
-              child: Obx(() {
-                if (_currentView.state.value.storyState == StoryState.success)
-                  return Directionality(
-                    textDirection: TextDirection.rtl,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: _currentView.cta,
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      _currentView.view,
+                      if (widget.showShadow)
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: 56,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color(0xff31303027).withOpacity(0.15),
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
-                  );
-                else
-                  return SizedBox();
-              }),
+                      if (widget.showShadow)
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          height: 56,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Color(0xff31303027).withOpacity(0.15),
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      Visibility(
+                        visible: widget.progressPosition != ProgressPosition.none,
+                        child: Align(
+                          alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 12,
+                            ),
+                            child: Transform.rotate(
+                              angle: pi,
+                              child: PageBar(
+                                // widget.storyItems.map((it) => PageData(Duration(seconds: 60), it!.shown)).toList(),
+                                widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
+                                this._currentAnimation,
+                                key: UniqueKey(),
+                                indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
+                                indicatorColor: widget.indicatorColor,
+                                indicatorForegroundColor: widget.indicatorForegroundColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: widget.progressPosition != ProgressPosition.none,
+                        child: Align(
+                          alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 28,
+                            ),
+                            child: Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(radius: 16, child: widget.avatar),
+                                      const SizedBox(width: 8),
+                                      widget.title,
+                                      const SizedBox(width: 2),
+                                      widget.mark,
+                                    ],
+                                  ),
+                                  SizedBox.square(
+                                    dimension: 24,
+                                    child: Obx(
+                                      () => _currentView.state.value.storyState == StoryState.buffering
+                                          ? CircularProgressIndicator(
+                                              strokeWidth: 1.0,
+                                              color: Colors.white,
+                                            )
+                                          : SizedBox(),
+                                    ),
+                                  ),
+                                  widget.leading,
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        heightFactor: 1,
+                        child: GestureDetector(
+                          onTapDown: (details) {
+                            widget.controller.pause();
+                          },
+                          onTapCancel: () {
+                            widget.controller.play();
+                          },
+                          onTapUp: (details) {
+                            // if debounce timed out (not active) then continue anim
+                            if (_nextDebouncer?.isActive == false) {
+                              widget.controller.play();
+                            } else {
+                              widget.controller.next();
+                            }
+                          },
+                          onVerticalDragStart: widget.onVerticalSwipeComplete == null
+                              ? null
+                              : (details) {
+                                  widget.controller.pause();
+                                },
+                          onVerticalDragCancel: widget.onVerticalSwipeComplete == null
+                              ? null
+                              : () {
+                                  widget.controller.play();
+                                },
+                          onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
+                              ? null
+                              : (details) {
+                                  if (verticalDragInfo == null) {
+                                    verticalDragInfo = VerticalDragInfo();
+                                  }
+
+                                  verticalDragInfo!.update(details.primaryDelta!);
+
+                                  // TODO: provide callback interface for animation purposes
+                                },
+                          onVerticalDragEnd: widget.onVerticalSwipeComplete == null
+                              ? null
+                              : (details) {
+                                  widget.controller.play();
+
+                                  // finish up drag cycle
+                                  if (!verticalDragInfo!.cancel && widget.onVerticalSwipeComplete != null) {
+                                    widget.onVerticalSwipeComplete!(verticalDragInfo!.direction);
+                                  }
+
+                                  verticalDragInfo = null;
+                                },
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        heightFactor: 1,
+                        child: SizedBox(
+                          child: GestureDetector(
+                            onTap: () {
+                              widget.controller.previous();
+                            },
+                          ),
+                          width: MediaQuery.of(context).size.width / 4,
+                        ),
+                      ),
+                      Obx(
+                        () {
+                          if (_currentView.state.value.storyState == StoryState.failure) {
+                            return Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Center(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    widget.failureIcon ?? SizedBox(),
+                                    Text(
+                                      "برقراری ارتباط امکان پذیر نیست",
+                                      style: widget.errorTextStyle?.copyWith(color: Colors.white),
+                                    ),
+                                    SizedBox(
+                                      height: 16,
+                                      width: double.infinity,
+                                    ),
+                                    OutlinedButton(
+                                      onPressed: () => _currentView.state.value.retry?.call(),
+                                      style: widget.retryButtonStyle,
+                                      child: Text('تلاش مجدد'),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      ),
+                      Positioned(
+                        bottom: 32,
+                        left: 0,
+                        right: 0,
+                        child: Obx(() {
+                          if (_currentView.state.value.storyState == StoryState.success)
+                            return Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.center,
+                                    child: _currentView.cta,
+                                  ),
+                                ],
+                              ),
+                            );
+                          else
+                            return SizedBox();
+                        }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ],
+          ),
         ),
       ),
     );
