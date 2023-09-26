@@ -9,16 +9,16 @@ import '../controller/story_controller.dart';
 
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
-  final VideoPlayerController playerController;
-  final Rx<StoryPipeline> state;
   final TextStyle? errorTextStyle;
+  final String videoUrl;
+  final Rx<StoryPipeline> state;
 
-  StoryVideo({
-    Key? key,
+  StoryVideo(
+    this.videoUrl, {
     this.storyController,
     required this.state,
     this.errorTextStyle,
-    required this.playerController,
+    Key? key,
   }) : super(key: key ?? UniqueKey());
 
   static StoryVideo url(
@@ -30,11 +30,11 @@ class StoryVideo extends StatefulWidget {
     Key? key,
   }) {
     return StoryVideo(
+      url,
       storyController: controller,
       state: state,
       errorTextStyle: errorTextStyle,
       key: key,
-      playerController: VideoPlayerController.networkUrl(Uri.parse(url))..initialize(),
     );
   }
 
@@ -47,29 +47,24 @@ class StoryVideo extends StatefulWidget {
 class StoryVideoState extends State<StoryVideo> {
   Future<void>? playerLoader;
   StreamSubscription? _streamSubscription;
+  VideoPlayerController? playerController;
 
   initializeVideo() {
     widget.storyController!.pause();
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
 
-    widget.playerController.addListener(() {
-      if(widget.playerController.value.isInitialized) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
-        widget.storyController!.attachVideoController(widget.playerController);
-        widget.playerController.play();
-      }
-    });
+    this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
-    // this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
-    // playerController!.initialize().then(
-    //   (v) {
-    //
-    //   },
-    //   onError: (_) {
-    //     SchedulerBinding.instance
-    //         .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
-    //   },
-    // );
+    playerController!.initialize().then(
+      (v) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
+        widget.storyController!.attachVideoController(playerController!);
+        playerController!.play();
+      },
+      onError: (_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
+      },
+    );
   }
 
   @override
@@ -84,8 +79,8 @@ class StoryVideoState extends State<StoryVideo> {
         if (widget.state.value.storyState == StoryState.success) {
           return Center(
             child: AspectRatio(
-              aspectRatio: widget.playerController.value.aspectRatio,
-              child: VideoPlayer(widget.playerController),
+              aspectRatio: playerController!.value.aspectRatio,
+              child: VideoPlayer(playerController!),
             ),
           );
         } else if (widget.state.value.storyState == StoryState.loading) {
@@ -127,7 +122,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   void dispose() {
-    widget.playerController.dispose();
+    playerController?.dispose();
     _streamSubscription?.cancel();
     super.dispose();
   }
