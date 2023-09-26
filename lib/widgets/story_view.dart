@@ -667,7 +667,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 top: 0,
                 left: 0,
                 right: 0,
-                height: 100,
+                height: 56,
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -686,7 +686,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: 100,
+                height: 56,
                 child: Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -704,25 +704,21 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               visible: widget.progressPosition != ProgressPosition.none,
               child: Align(
                 alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
-                child: SafeArea(
-                  bottom: widget.inline ? false : true,
-                  // we use SafeArea here for notched and bezeles phones
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    child: Transform.rotate(
-                      angle: pi,
-                      child: PageBar(
-                        // widget.storyItems.map((it) => PageData(Duration(seconds: 60), it!.shown)).toList(),
-                        widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
-                        this._currentAnimation,
-                        key: UniqueKey(),
-                        indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
-                        indicatorColor: widget.indicatorColor,
-                        indicatorForegroundColor: widget.indicatorForegroundColor,
-                      ),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Transform.rotate(
+                    angle: pi,
+                    child: PageBar(
+                      // widget.storyItems.map((it) => PageData(Duration(seconds: 60), it!.shown)).toList(),
+                      widget.storyItems.map((it) => PageData(it!.duration, it.shown)).toList(),
+                      this._currentAnimation,
+                      key: UniqueKey(),
+                      indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
+                      indicatorColor: widget.indicatorColor,
+                      indicatorForegroundColor: widget.indicatorForegroundColor,
                     ),
                   ),
                 ),
@@ -732,44 +728,40 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               visible: widget.progressPosition != ProgressPosition.none,
               child: Align(
                 alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
-                child: SafeArea(
-                  bottom: widget.inline ? false : true,
-                  // we use SafeArea here for notched and bezeles phones
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                    child: Directionality(
-                      textDirection: TextDirection.rtl,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              CircleAvatar(radius: 14, child: widget.avatar),
-                              const SizedBox(width: 8),
-                              widget.title,
-                              const SizedBox(width: 2),
-                              widget.mark,
-                            ],
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(radius: 14, child: widget.avatar),
+                            const SizedBox(width: 8),
+                            widget.title,
+                            const SizedBox(width: 2),
+                            widget.mark,
+                          ],
+                        ),
+                        SizedBox.square(
+                          dimension: 24,
+                          child: Obx(
+                            () => _currentView.state.value.storyState == StoryState.buffering
+                                ? CircularProgressIndicator(
+                                    strokeWidth: 1.0,
+                                    color: Colors.white,
+                                  )
+                                : SizedBox(),
                           ),
-                          SizedBox.square(
-                            dimension: 24,
-                            child: Obx(
-                              () => _currentView.state.value.storyState == StoryState.buffering
-                                  ? CircularProgressIndicator(
-                                      strokeWidth: 1.0,
-                                      color: Colors.white,
-                                    )
-                                  : SizedBox(),
-                            ),
-                          ),
-                          widget.leading,
-                        ],
-                      ),
+                        ),
+                        widget.leading,
+                      ],
                     ),
                   ),
                 ),
