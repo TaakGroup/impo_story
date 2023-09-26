@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -49,6 +50,7 @@ class StoryVideoState extends State<StoryVideo> {
   Future<void>? playerLoader;
   StreamSubscription? _streamSubscription;
   VideoPlayerController? playerController;
+  ChewieController? chewieController;
 
   initializeVideo() async {
     widget.storyController!.pause();
@@ -62,32 +64,20 @@ class StoryVideoState extends State<StoryVideo> {
       print('[VideoControllerService]: No video in cache');
       this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
     }
-    try {
-      playerController!.initialize().then(
-        (v) {
-          SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
-          widget.storyController!.attachVideoController(playerController!);
-          playerController!.play();
-        },
-        onError: (_) {
-          SchedulerBinding.instance
-              .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
-        },
-      );
-    } catch (_) {
-      this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
-      playerController!.initialize().then(
-        (v) {
-          SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
-          widget.storyController!.attachVideoController(playerController!);
-          playerController!.play();
-        },
-        onError: (_) {
-          SchedulerBinding.instance
-              .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
-        },
-      );
-    }
+
+    playerController!.initialize().then(
+      (v) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
+        widget.storyController!.attachVideoController(playerController!);
+        chewieController = ChewieController(
+          videoPlayerController: playerController!,
+          autoPlay: true,
+        );
+      },
+      onError: (_) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
+      },
+    );
   }
 
   @override
@@ -103,7 +93,7 @@ class StoryVideoState extends State<StoryVideo> {
           return Center(
             child: AspectRatio(
               aspectRatio: playerController!.value.aspectRatio,
-              child: VideoPlayer(playerController!),
+              child: Chewie(controller: chewieController!),
             ),
           );
         } else if (widget.state.value.storyState == StoryState.loading) {
