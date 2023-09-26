@@ -18,7 +18,7 @@ class StoryController {
     this.playerController?.addListener(() {
       if (playerController.value.isPlaying) {
         playbackNotifier.add(PlaybackState.play);
-      } else if (playerController.value.isCompleted) {
+      } else {
         playbackNotifier.add(PlaybackState.pause);
       }
     });
