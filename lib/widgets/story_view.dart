@@ -674,7 +674,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         cornerRadius: 12,
                         cornerSmoothing: 0.6,
                       ),
-
                     ),
                   ),
                   child: Stack(
