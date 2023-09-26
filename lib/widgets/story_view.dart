@@ -742,7 +742,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            CircleAvatar(radius: 14, child: widget.avatar),
+                            CircleAvatar(radius: 16, child: widget.avatar),
                             const SizedBox(width: 8),
                             widget.title,
                             const SizedBox(width: 2),
