@@ -56,8 +56,12 @@ class StoryVideoState extends State<StoryVideo> {
     final fileInfo = await DefaultCacheManager().getFileFromCache(widget.videoUrl);
 
     if (fileInfo != null) {
-      print('[VideoControllerService]: Loading video from cache');
-      this.playerController = VideoPlayerController.file(fileInfo.file);
+      try {
+        print('[VideoControllerService]: Loading video from cache');
+        this.playerController = VideoPlayerController.file(fileInfo.file);
+      } catch (_) {
+        this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+      }
     } else {
       print('[VideoControllerService]: No video in cache');
       this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
@@ -70,7 +74,8 @@ class StoryVideoState extends State<StoryVideo> {
         playerController!.play();
       },
       onError: (_) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
+        SchedulerBinding.instance
+            .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
       },
     );
   }
