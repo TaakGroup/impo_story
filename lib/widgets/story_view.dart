@@ -837,7 +837,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                     widget.controller.previous();
                   },
                 ),
-                width: 70,
+                width: MediaQuery.of(context).size.width / 4,
               ),
             ),
             Obx(
