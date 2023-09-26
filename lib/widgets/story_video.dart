@@ -62,18 +62,32 @@ class StoryVideoState extends State<StoryVideo> {
       print('[VideoControllerService]: No video in cache');
       this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
     }
-
-    playerController!.initialize().then(
-      (v) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
-        widget.storyController!.attachVideoController(playerController!);
-        playerController!.play();
-      },
-      onError: (_) {
-        SchedulerBinding.instance
-            .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
-      },
-    );
+    try {
+      playerController!.initialize().then(
+        (v) {
+          SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
+          widget.storyController!.attachVideoController(playerController!);
+          playerController!.play();
+        },
+        onError: (_) {
+          SchedulerBinding.instance
+              .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
+        },
+      );
+    } catch (_) {
+      this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+      playerController!.initialize().then(
+        (v) {
+          SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
+          widget.storyController!.attachVideoController(playerController!);
+          playerController!.play();
+        },
+        onError: (_) {
+          SchedulerBinding.instance
+              .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
+        },
+      );
+    }
   }
 
   @override
