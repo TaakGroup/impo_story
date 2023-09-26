@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:story_view/models/story_events.dart';
 import 'package:story_view/models/story_model.dart';
+import 'package:video_player/video_player.dart';
 
 import '../controller/story_controller.dart';
 import '../utils.dart';
@@ -271,11 +272,10 @@ class StoryItem {
       Container(
         key: key,
         color: Colors.black,
-        child: StoryVideo.url(
-          url,
+        child: StoryVideo(
           state: loadEvent,
-          controller: controller,
-          requestHeaders: requestHeaders,
+          storyController: controller,
+          playerController: VideoPlayerController.networkUrl(Uri.parse(url))..initialize(),
         ),
       ),
       cta ?? SizedBox(),
