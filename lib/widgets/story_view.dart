@@ -768,17 +768,17 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                                   ),
                                   Row(
                                     children: [
-                                      SizedBox.square(
-                                        dimension: 24,
-                                        child: Obx(
-                                          () => _currentView.state.value.storyState == StoryState.buffering
-                                              ? CircularProgressIndicator(
-                                                  strokeWidth: 1.0,
-                                                  color: Colors.white,
-                                                )
-                                              : SizedBox(),
-                                        ),
-                                      ),
+                                      // SizedBox.square(
+                                      //   dimension: 24,
+                                      //   child: Obx(
+                                      //     () => _currentView.state.value.storyState == StoryState.buffering
+                                      //         ? CircularProgressIndicator(
+                                      //             strokeWidth: 1.0,
+                                      //             color: Colors.white,
+                                      //           )
+                                      //         : SizedBox(),
+                                      //   ),
+                                      // ),
                                       widget.leading,
                                     ],
                                   ),
