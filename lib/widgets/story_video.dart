@@ -67,7 +67,9 @@ class StoryVideoState extends State<StoryVideo> {
         widget.storyController!.attachVideoController(playerController!);
         playerController?.addListener(() {
           if (playerController!.value.isPlaying) {
-            SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.buffering)));
+            if(!playerController!.value.isPlaying && !playerController!.value.isBuffering) {
+              SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.buffering)));
+            }
           }
         });
         SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
@@ -89,7 +91,7 @@ class StoryVideoState extends State<StoryVideo> {
   Widget getContentView() {
     return Obx(
       () {
-        if (widget.state.value.storyState == StoryState.success || (playerController != null && playerController!.value.isInitialized && !playerController!.value.isPlaying && !playerController!.value.isBuffering)) {
+        if (widget.state.value.storyState == StoryState.success || widget.state.value.storyState == StoryState.buffering) {
           return Center(
             child: AspectRatio(
               aspectRatio: playerController!.value.aspectRatio,
