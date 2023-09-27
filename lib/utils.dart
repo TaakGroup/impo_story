@@ -1,3 +1,5 @@
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+
 enum StoryState { loading, buffering, success, failure }
 
 enum StoryEvent { none, play, pause }
@@ -33,4 +35,15 @@ class VerticalDragInfo {
 
     direction = tmpDirection;
   }
+}
+
+class StoryCacheManager {
+  static const key = 'story';
+  static CacheManager instance = CacheManager(
+    Config(
+      key,
+      stalePeriod: const Duration(days: 3),
+      repo: JsonCacheInfoRepository(databaseName: key),
+    ),
+  );
 }

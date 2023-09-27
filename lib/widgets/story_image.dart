@@ -25,7 +25,7 @@ class ImageLoader {
 
   /// Load image from disk cache first, if not found then load from network.
   /// `onComplete` is called when [imageBytes] become available.
-  void loadImage(VoidCallback onComplete) {
+  Future<void> loadImage(VoidCallback onComplete) async {
     this.state = StoryState.loading;
     SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.loading)));
     onComplete();
@@ -36,7 +36,7 @@ class ImageLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager().getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
+    final fileStream = await StoryCacheManager.instance.getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen(
       (fileResponse) {

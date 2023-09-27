@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 
@@ -53,7 +52,7 @@ class StoryVideoState extends State<StoryVideo> {
   initializeVideo() async {
     widget.storyController!.pause();
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
-    final fileInfo = await DefaultCacheManager().getFileFromCache(widget.videoUrl);
+    final fileInfo = await StoryCacheManager.instance.getFileFromCache(widget.videoUrl);
 
     if (fileInfo != null) {
       print('[VideoControllerService]: Loading video from cache');
