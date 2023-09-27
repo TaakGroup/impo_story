@@ -1,7 +1,7 @@
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'models/story_model.dart';
 
-enum StoryState { loading, buffering, success, failure }
+enum StoryState { transition, loading, buffering, success, failure }
 
 enum StoryEvent { none, play, pause }
 

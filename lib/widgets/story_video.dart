@@ -50,8 +50,10 @@ class StoryVideoState extends State<StoryVideo> {
   VideoPlayerController? playerController;
 
   initializeVideo() async {
+    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.transition)));
+    Future.delayed(Duration(milliseconds: 250)).then((value) => SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading))));
     widget.storyController!.pause();
-    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
+
     final fileInfo = await StoryCacheManager.instance.getFileFromCache(widget.videoUrl);
 
     if (fileInfo != null) {
