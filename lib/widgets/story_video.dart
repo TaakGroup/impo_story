@@ -88,7 +88,7 @@ class StoryVideoState extends State<StoryVideo> {
   Widget getContentView() {
     return Obx(
       () {
-        if (widget.state.value.storyState == StoryState.success) {
+        if (widget.state.value.storyState == StoryState.success || widget.state.value.storyState == StoryState.buffering) {
           return Center(
             child: AspectRatio(
               aspectRatio: playerController!.value.aspectRatio,
