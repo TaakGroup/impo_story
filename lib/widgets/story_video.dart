@@ -8,14 +8,14 @@ import '../utils.dart';
 import '../controller/story_controller.dart';
 
 class StoryVideo extends StatefulWidget {
-  final StoryController? storyController;
+  final StoryController storyController;
   final TextStyle? errorTextStyle;
   final String videoUrl;
   final Rx<StoryPipeline> state;
 
   StoryVideo(
     this.videoUrl, {
-    this.storyController,
+    required this.storyController,
     required this.state,
     this.errorTextStyle,
     Key? key,
@@ -23,7 +23,7 @@ class StoryVideo extends StatefulWidget {
 
   static StoryVideo url(
     String url, {
-    StoryController? controller,
+    required StoryController controller,
     Map<String, dynamic>? requestHeaders,
     TextStyle? errorTextStyle,
     required Rx<StoryPipeline> state,
@@ -51,7 +51,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   initializeVideo() async {
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
-    widget.storyController!.pause();
+    widget.storyController.pause();
     final fileInfo = await StoryCacheManager.instance.getFileFromCache(widget.videoUrl);
 
     if (fileInfo != null) {
@@ -64,7 +64,7 @@ class StoryVideoState extends State<StoryVideo> {
 
     playerController?.initialize().then(
       (v) {
-        widget.storyController!.attachVideoController(playerController!);
+        widget.storyController.attachVideoController(playerController!);
 
         playerController?.addListener(() {
           if (playerController!.value.isPlaying) {
@@ -137,6 +137,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   void dispose() {
+    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
     playerController?.dispose();
     _streamSubscription?.cancel();
     super.dispose();

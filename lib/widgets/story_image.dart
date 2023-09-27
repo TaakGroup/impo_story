@@ -57,7 +57,8 @@ class ImageLoader {
           onComplete();
         }, onError: (error) {
           this.state = StoryState.failure;
-          SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.failure, retry: () => loadImage(onComplete))));
+          SchedulerBinding.instance
+              .addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.failure, retry: () => loadImage(onComplete))));
           onComplete();
         });
       },
@@ -81,12 +82,12 @@ class StoryImage extends StatefulWidget {
 
   final BoxFit? fit;
 
-  final StoryController? controller;
+  final StoryController controller;
 
   StoryImage(
     this.imageLoader, {
     Key? key,
-    this.controller,
+    required this.controller,
     this.fit,
     this.errorTextStyle,
     this.retryButtonStyle,
@@ -95,7 +96,7 @@ class StoryImage extends StatefulWidget {
   /// Use this shorthand to fetch images/gifs from the provided [url]
   factory StoryImage.url(
     String url, {
-    StoryController? controller,
+    required StoryController controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
     TextStyle? errorTextStyle,
@@ -127,9 +128,9 @@ class StoryImageState extends State<StoryImage> {
   @override
   void initState() {
     super.initState();
-
+    widget.controller.playerController = null;
     if (widget.controller != null) {
-      this._streamSubscription = widget.controller!.playbackNotifier.listen((playbackState) {
+      this._streamSubscription = widget.controller.playbackNotifier.listen((playbackState) {
         // for the case of gifs we need to pause/play
         if (widget.imageLoader.frames == null) {
           return;
