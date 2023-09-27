@@ -16,12 +16,12 @@ class StoryController {
   void attachVideoController(VideoPlayerController playerController) {
     this.playerController = playerController;
     this.playerController?.addListener(() {
-      print(playerController.value);
-      print('/'*100);
       if (playerController.value.isPlaying) {
         playbackNotifier.add(PlaybackState.play);
-      } else if (playerController.value.isBuffering) {
+      } else if (!playerController.value.isCompleted) {
         playbackNotifier.add(PlaybackState.pause);
+        print(playerController.value);
+        print('/'*100);
       }
     });
   }
