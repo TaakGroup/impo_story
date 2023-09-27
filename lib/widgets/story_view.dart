@@ -233,7 +233,7 @@ class StoryItem {
 
     if (video != null) {
       return StoryItem.pageVideo(
-        video.url,
+        video.streamUrl ?? video.url,
         model: storyModel,
         imageFit: BoxFit.cover,
         duration: Duration(milliseconds: storyModel.duration),

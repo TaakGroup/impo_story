@@ -24,6 +24,7 @@ class LinkModel {
 class StoryEvents {
   late StoryEventType type;
   late String url;
+  late String? streamUrl;
   late String? text;
   late LinkModel link;
 
@@ -32,6 +33,7 @@ class StoryEvents {
   StoryEvents.fromJson(Map<String, dynamic> json) {
     type = StoryEventType.values[json['type'] - 1 ?? 0];
     url = json['url'];
+    streamUrl = json['videoStreamUrl'];
     text = json['text'];
     link = LinkModel.fromJson(json['link']);
   }
@@ -40,6 +42,7 @@ class StoryEvents {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['type'] = this.type;
     data['url'] = this.url;
+    data['streamUrl'] = this.streamUrl;
     data['text'] = this.text;
     data['link'] = this.link.toJson();
     return data;
