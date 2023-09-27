@@ -65,6 +65,7 @@ class StoryVideoState extends State<StoryVideo> {
     playerController!.initialize().then(
       (v) {
         widget.storyController!.attachVideoController(playerController!);
+
         playerController?.addListener(() {
           if (playerController!.value.isPlaying) {
             SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.success)));
@@ -76,8 +77,7 @@ class StoryVideoState extends State<StoryVideo> {
         playerController!.play();
       },
       onError: (_) {
-        SchedulerBinding.instance
-            .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
+        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
       },
     );
   }
