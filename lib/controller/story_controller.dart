@@ -19,6 +19,7 @@ class StoryController {
       if (playerController.value.isPlaying) {
         playbackNotifier.add(PlaybackState.play);
       } else if (!playerController.value.isCompleted) {
+        print('/'*100);
         playbackNotifier.add(PlaybackState.pause);
       }
     });
