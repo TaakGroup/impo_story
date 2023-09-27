@@ -18,8 +18,6 @@ class StoryController {
     this.playerController?.addListener(() {
       if (playerController.value.isPlaying) {
         playbackNotifier.add(PlaybackState.play);
-      } else if (playerController.value.isCompleted) {
-        next();
       } else {
         playbackNotifier.add(PlaybackState.pause);
       }
@@ -56,7 +54,7 @@ class StoryController {
 
   void jumpTo(int index) {
     for (int i = 0; i < index; i++) {
-      playbackNotifier.add(PlaybackState.next);
+      next();
     }
   }
 
