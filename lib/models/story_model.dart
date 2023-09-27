@@ -15,7 +15,7 @@ class StoryModel {
     isViewed = json['isViewed'];
     text = json['text'];
     coverImage = json['coverImage'];
-    duration = json['duration'];
+    duration = json['time'];
     if (json['events'] != null) {
       events = <StoryEvents>[];
       json['events'].forEach((v) {
@@ -30,7 +30,7 @@ class StoryModel {
     data['isViewed'] = this.isViewed;
     data['text'] = this.text;
     data['coverImage'] = this.coverImage;
-    data['duration'] = this.duration;
+    data['time'] = this.duration;
     data['events'] = this.events.map((v) => v.toJson()).toList();
 
     return data;
