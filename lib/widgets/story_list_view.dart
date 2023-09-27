@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:story_view/models/story_model.dart';
+import '../utils.dart';
 
 class StoryListView extends StatelessWidget {
   final List<StoryModel> stories;
@@ -98,7 +100,10 @@ class StoryItemWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: NetworkImage(story.coverImage),
+                      image: CachedNetworkImageProvider(
+                        story.coverImage,
+                        cacheManager: StoryCacheManager.instance,
+                      ),
                     ),
                   ),
                 ),
