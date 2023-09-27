@@ -62,7 +62,7 @@ class StoryVideoState extends State<StoryVideo> {
       this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
     }
 
-    playerController!.initialize().then(
+    playerController?.initialize().then(
       (v) {
         widget.storyController!.attachVideoController(playerController!);
 
