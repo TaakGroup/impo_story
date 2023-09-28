@@ -16,6 +16,8 @@ dependencies:
   get: ^4.6.5
   figma_squircle: ^0.5.3
   cached_network_image: ^3.0.0
+  like_button: ^2.0.5
+  iconly: ^1.0.1
 
 dev_dependencies:
   flutter_test:

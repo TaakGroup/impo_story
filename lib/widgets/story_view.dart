@@ -6,6 +6,8 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconly/iconly.dart';
+import 'package:like_button/like_button.dart';
 import 'package:story_view/models/story_events.dart';
 import 'package:story_view/models/story_model.dart';
 
@@ -909,6 +911,19 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                           else
                             return SizedBox();
                         }),
+                      ),
+                      Positioned(
+                        bottom: 24,
+                        right: 16,
+                        child: LikeButton(
+                          size: 28,
+                          bubblesColor: BubblesColor(
+                            dotPrimaryColor: Colors.red,
+                            dotSecondaryColor: Colors.redAccent,
+                          ),
+                          likeBuilder: (bool isLiked) => isLiked ?  Icon(IconlyBold.heart, color: Colors.red,) : Icon(IconlyLight.heart, color: Colors.white,) ,
+                        ),
+
                       ),
                     ],
                   ),
