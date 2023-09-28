@@ -913,7 +913,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         }),
                       ),
                       Positioned(
-                        bottom: 24,
+                        bottom: 20,
                         right: 16,
                         child: LikeButton(
                           size: 28,
@@ -921,7 +921,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                             dotPrimaryColor: Colors.red,
                             dotSecondaryColor: Colors.redAccent,
                           ),
-                          likeBuilder: (bool isLiked) => isLiked ?  Icon(IconlyBold.heart, color: Colors.red,) : Icon(IconlyLight.heart, color: Colors.white,) ,
+                          likeBuilder: (bool isLiked) => isLiked ?  Icon(IconlyBold.heart, color: Colors.red, size: 28,) : Icon(IconlyLight.heart, color: Colors.white,size: 28) ,
                         ),
 
                       ),

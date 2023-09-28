@@ -33,7 +33,7 @@ class StoryEvents {
   StoryEvents.fromJson(Map<String, dynamic> json) {
     type = StoryEventType.values[json['type'] - 1 ?? 0];
     url = json['url'];
-    streamUrl = json['videoStreamUrl'];
+    streamUrl = json['streamUrl'];
     text = json['text'];
     link = LinkModel.fromJson(json['link']);
   }
