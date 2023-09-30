@@ -846,7 +846,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         child: SizedBox(
                           child: GestureDetector(
                             onTap: () {
-                              widget.controller.previous();
+                              if(widget.storyItems.first != _currentView) {
+                                widget.controller.previous();
+                              }
                             },
                           ),
                           width: MediaQuery.of(context).size.width / 4,
