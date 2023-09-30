@@ -51,8 +51,9 @@ class StoryVideoState extends State<StoryVideo> {
 
   initializeVideo() async {
     widget.storyController.playerController = null;
-    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
     widget.storyController.pause();
+    SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
+
     final fileInfo = await StoryCacheManager.instance.getFileFromCache(widget.videoUrl);
 
     if (fileInfo != null) {
@@ -136,6 +137,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   void dispose() {
+    widget.storyController.playerController = null;
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
     playerController?.dispose();
     _streamSubscription?.cancel();
