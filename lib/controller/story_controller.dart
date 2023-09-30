@@ -15,10 +15,12 @@ class StoryController {
 
   void attachVideoController(VideoPlayerController playerController) {
     this.playerController = playerController;
-    this.playerController?.addListener(() {
+    this.playerController?.addListener(() async {
+
       if (playerController.value.isPlaying) {
         playbackNotifier.add(PlaybackState.play);
       } else if (!playerController.value.isCompleted) {
+        if((await playerController.position)! < Duration(milliseconds: 500))
         playbackNotifier.add(PlaybackState.pause);
       }
     });
