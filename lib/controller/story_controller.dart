@@ -15,6 +15,7 @@ class StoryController {
 
   void attachVideoController(VideoPlayerController playerController) {
     this.playerController = playerController;
+
     this.playerController?.addListener(
       () async {
         if (playerController.value.isPlaying) {
