@@ -15,15 +15,17 @@ class StoryController {
 
   void attachVideoController(VideoPlayerController playerController) {
     this.playerController = playerController;
-    this.playerController?.addListener(() async {
-
-      if (playerController.value.isPlaying) {
-        playbackNotifier.add(PlaybackState.play);
-      } else if (!playerController.value.isCompleted) {
-        if((playerController.value.duration - playerController.value.position) > Duration(milliseconds: 500))
-        playbackNotifier.add(PlaybackState.pause);
-      }
-    });
+    this.playerController?.addListener(
+      () async {
+        if (playerController.value.isPlaying) {
+          playbackNotifier.add(PlaybackState.play);
+        } else if (!playerController.value.isCompleted) {
+          if ((playerController.value.duration - playerController.value.position) > Duration(milliseconds: 500)) {
+            playbackNotifier.add(PlaybackState.pause);
+          }
+        }
+      },
+    );
   }
 
   /// Notify listeners with a [PlaybackState.pause] state
