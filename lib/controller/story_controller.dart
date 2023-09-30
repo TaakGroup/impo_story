@@ -19,10 +19,8 @@ class StoryController {
       () async {
         if (playerController.value.isPlaying) {
           playbackNotifier.add(PlaybackState.play);
-        } else if (!playerController.value.isCompleted) {
-          if ((playerController.value.duration - playerController.value.position) > Duration(milliseconds: 500)) {
-            playbackNotifier.add(PlaybackState.pause);
-          }
+        } else if ((playerController.value.duration - playerController.value.position) > Duration(milliseconds: 500)) {
+          playbackNotifier.add(PlaybackState.pause);
         }
       },
     );
