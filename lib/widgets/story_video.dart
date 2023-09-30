@@ -77,7 +77,8 @@ class StoryVideoState extends State<StoryVideo> {
         playerController!.play();
       },
       onError: (_) {
-        SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
+        SchedulerBinding.instance
+            .addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
       },
     );
   }
@@ -125,8 +126,9 @@ class StoryVideoState extends State<StoryVideo> {
         maxHeight: double.infinity,
         child: FittedBox(
           fit: BoxFit.cover,
-          child: AspectRatio(
-            aspectRatio: 1080/1920,
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width * 1920 / 1080,
             child: getContentView(),
           ),
         ),
