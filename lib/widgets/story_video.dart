@@ -125,7 +125,10 @@ class StoryVideoState extends State<StoryVideo> {
         maxHeight: double.infinity,
         child: FittedBox(
           fit: BoxFit.cover,
-          child: getContentView(),
+          child: AspectRatio(
+            aspectRatio: 1080/1920,
+            child: getContentView(),
+          ),
         ),
       ),
     );
