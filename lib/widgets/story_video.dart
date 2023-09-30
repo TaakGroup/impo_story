@@ -125,11 +125,7 @@ class StoryVideoState extends State<StoryVideo> {
         maxHeight: double.infinity,
         child: FittedBox(
           fit: BoxFit.cover,
-          child: SizedBox(
-            width: MediaQuery.of(context).size.height * 1080 / 1920,
-            height: MediaQuery.of(context).size.height,
-            child: getContentView(),
-          ),
+          child: getContentView(),
         ),
       ),
     );
