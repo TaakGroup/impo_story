@@ -422,13 +422,13 @@ class StoryView extends StatefulWidget {
   // Indicator Foreground Color
   final Color? indicatorForegroundColor;
 
-  final Widget avatar;
+  final Widget? avatar;
 
-  final Widget title;
+  final Widget? title;
 
-  final Widget mark;
+  final Widget? mark;
 
-  final Widget leading;
+  final Widget? leading;
 
   final bool showShadow;
 
@@ -451,11 +451,11 @@ class StoryView extends StatefulWidget {
     this.onVerticalSwipeComplete,
     this.indicatorColor,
     this.indicatorForegroundColor,
-    required this.avatar,
-    required this.title,
-    required this.mark,
-    required this.leading,
-    required this.showShadow,
+    this.avatar,
+    this.title,
+    this.mark,
+    this.leading,
+    this.showShadow = true,
     this.errorTextStyle,
     this.retryButtonStyle,
     this.failureIcon,
@@ -760,9 +760,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                                     children: [
                                       CircleAvatar(radius: 16, child: widget.avatar),
                                       const SizedBox(width: 8),
-                                      widget.title,
+                                      widget.title ?? SizedBox(),
                                       const SizedBox(width: 2),
-                                      widget.mark,
+                                      widget.mark ?? SizedBox(),
                                     ],
                                   ),
                                   Row(
@@ -778,7 +778,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                                               : SizedBox(),
                                         ),
                                       ),
-                                      widget.leading,
+                                      widget.leading ?? SizedBox(),
                                     ],
                                   ),
                                 ],
