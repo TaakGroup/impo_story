@@ -43,7 +43,13 @@ class StoryThreadsView extends StatelessWidget {
           inline: true,
           showShadow: true,
           controller: controller.findController(threads[i].id),
-          onComplete: onComplete,
+          onComplete: () {
+            if (threads[i] == threads.last) {
+              onComplete?.call();
+            } else {
+              controller.nextThreads();
+            }
+          },
           onStoryShow: onStoryShow,
           retryButtonStyle: retryButtonStyle,
           errorTextStyle: errorTextStyle,
