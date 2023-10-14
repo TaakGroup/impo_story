@@ -16,7 +16,7 @@ dependencies:
   get: ^4.6.5
   figma_squircle: ^0.5.3
   cached_network_image: ^3.0.0
-  cube_transition_plus: ^2.0.1
+  flutter_carousel_slider: ^1.1.0
 #  like_button: ^2.0.5
 
 dev_dependencies:

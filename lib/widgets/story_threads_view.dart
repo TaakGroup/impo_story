@@ -1,7 +1,6 @@
 import 'dart:ui';
-
-import 'package:cube_transition_plus/cube_transition_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:story_view/models/story_events.dart';
 import '../controller/story_threads_controller.dart';
 import '../models/story_model.dart';
@@ -39,52 +38,39 @@ class StoryThreadsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CubePageView.builder(
-        onPageChanged: (index) => controller.onPageChanged(threads[index]),
+      body: CarouselSlider.builder(
+
+        // onPageChanged: (index) => controller.onPageChanged(threads[index]),
         controller: controller.pageController,
         itemCount: threads.length,
-        itemBuilder: (context, i, notifier) {
-          final transform = Matrix4.identity();
-          final t = (i - notifier).abs();
-          final scale = lerpDouble(1.5, 0, t);
-          transform.scale(scale, scale);
-          return CubeWidget(
-            index: i,
-            pageNotifier: notifier,
-            child: Transform(
-              alignment: Alignment.center,
-              transform: transform,
-              child: StoryView(
-                inline: true,
-                showShadow: true,
-                onPreviousPressed: controller.previousThreads,
-                controller: controller.findController(threads[i].id),
-                onComplete: () {
-                  if (threads[i] == threads.last) {
-                    onComplete?.call();
-                  } else {
-                    controller.nextThreads();
-                  }
-                },
-                onStoryShow: onStoryShow,
-                retryButtonStyle: retryButtonStyle,
-                errorTextStyle: errorTextStyle,
-                indicatorForegroundColor: indicatorForegroundColor,
-                title: title,
-                avatar: avatar,
-                storyItems: [
-                  for (int j = 0; j < threads.length; j++)
-                    StoryItem.fromModel(
-                      threads[i].stories[j],
-                      controller.findController(threads[i].id),
-                      onButtonPressed: onButtonPressed,
-                      buttonStyle: buttonStyle,
-                    )
-                ],
-              ),
-            ),
-          );
-        },
+        slideBuilder: (i) => StoryView(
+          inline: true,
+          showShadow: true,
+          onPreviousPressed: controller.previousThreads,
+          controller: controller.findController(threads[i].id),
+          onComplete: () {
+            if (threads[i] == threads.last) {
+              onComplete?.call();
+            } else {
+              controller.nextThreads();
+            }
+          },
+          onStoryShow: onStoryShow,
+          retryButtonStyle: retryButtonStyle,
+          errorTextStyle: errorTextStyle,
+          indicatorForegroundColor: indicatorForegroundColor,
+          title: title,
+          avatar: avatar,
+          storyItems: [
+            for (int j = 0; j < threads.length; j++)
+              StoryItem.fromModel(
+                threads[i].stories[j],
+                controller.findController(threads[i].id),
+                onButtonPressed: onButtonPressed,
+                buttonStyle: buttonStyle,
+              )
+          ],
+        ),
       ),
     );
   }
