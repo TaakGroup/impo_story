@@ -5,5 +5,13 @@ class StoryThreadsController {
   PageController pageController = PageController();
   Map<String, StoryController> _controllers = {};
 
-  StoryController find(String id) => _controllers[id] ??= StoryController();
+  StoryThreadsController() {
+    pageController.addListener(() {
+      // Todo : stop last thread
+    });
+  }
+
+  jumpTo(int index) => pageController.jumpTo(index.toDouble());
+
+  StoryController findController(String id) => _controllers[id] ??= StoryController();
 }
