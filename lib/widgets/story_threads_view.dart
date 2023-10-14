@@ -42,6 +42,7 @@ class StoryThreadsView extends StatelessWidget {
         slideTransform: CubeTransform(),
         // onPageChanged: (index) => controller.onPageChanged(threads[index]),
         controller: controller.pageController,
+        unlimitedMode: true,
         itemCount: threads.length,
         slideBuilder: (i) => StoryView(
           inline: true,
