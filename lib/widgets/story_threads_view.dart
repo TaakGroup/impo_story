@@ -37,11 +37,13 @@ class StoryThreadsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView.builder(
+        onPageChanged: (index) => controller.onPageChanged(threads[index]),
         controller: controller.pageController,
         itemCount: threads.length,
         itemBuilder: (_, i) => StoryView(
           inline: true,
           showShadow: true,
+          onPreviousPressed: controller.previousThreads,
           controller: controller.findController(threads[i].id),
           onComplete: () {
             if (threads[i] == threads.last) {

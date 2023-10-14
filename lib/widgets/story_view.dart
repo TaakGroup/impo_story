@@ -440,6 +440,8 @@ class StoryView extends StatefulWidget {
 
   final EdgeInsets? profilePadding;
 
+  final Function? onPreviousPressed;
+
   StoryView({
     required this.storyItems,
     required this.controller,
@@ -460,6 +462,7 @@ class StoryView extends StatefulWidget {
     this.retryButtonStyle,
     this.failureIcon,
     this.profilePadding,
+    this.onPreviousPressed,
   });
 
   @override
@@ -848,6 +851,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                             onTap: () {
                               if (widget.storyItems.first != _currentView) {
                                 widget.controller.previous();
+                              } else {
+                                widget.onPreviousPressed?.call();
                               }
                             },
                           ),
