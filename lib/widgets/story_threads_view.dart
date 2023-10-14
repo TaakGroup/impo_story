@@ -1,3 +1,4 @@
+import 'package:cube_transition_plus/cube_transition_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:story_view/models/story_events.dart';
 import '../controller/story_threads_controller.dart';
@@ -36,37 +37,41 @@ class StoryThreadsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView.builder(
+      body: CubePageView.builder(
         onPageChanged: (index) => controller.onPageChanged(threads[index]),
         controller: controller.pageController,
         itemCount: threads.length,
-        itemBuilder: (_, i) => StoryView(
-          inline: true,
-          showShadow: true,
-          onPreviousPressed: controller.previousThreads,
-          controller: controller.findController(threads[i].id),
-          onComplete: () {
-            if (threads[i] == threads.last) {
-              onComplete?.call();
-            } else {
-              controller.nextThreads();
-            }
-          },
-          onStoryShow: onStoryShow,
-          retryButtonStyle: retryButtonStyle,
-          errorTextStyle: errorTextStyle,
-          indicatorForegroundColor: indicatorForegroundColor,
-          title: title,
-          avatar: avatar,
-          storyItems: [
-            for (int j = 0; j < threads.length; j++)
-              StoryItem.fromModel(
-                threads[i].stories[j],
-                controller.findController(threads[i].id),
-                onButtonPressed: onButtonPressed,
-                buttonStyle: buttonStyle,
-              )
-          ],
+        itemBuilder: (_, i, p) => CubeWidget(
+          index: i,
+          pageNotifier: p,
+          child: StoryView(
+            inline: true,
+            showShadow: true,
+            onPreviousPressed: controller.previousThreads,
+            controller: controller.findController(threads[i].id),
+            onComplete: () {
+              if (threads[i] == threads.last) {
+                onComplete?.call();
+              } else {
+                controller.nextThreads();
+              }
+            },
+            onStoryShow: onStoryShow,
+            retryButtonStyle: retryButtonStyle,
+            errorTextStyle: errorTextStyle,
+            indicatorForegroundColor: indicatorForegroundColor,
+            title: title,
+            avatar: avatar,
+            storyItems: [
+              for (int j = 0; j < threads.length; j++)
+                StoryItem.fromModel(
+                  threads[i].stories[j],
+                  controller.findController(threads[i].id),
+                  onButtonPressed: onButtonPressed,
+                  buttonStyle: buttonStyle,
+                )
+            ],
+          ),
         ),
       ),
     );
