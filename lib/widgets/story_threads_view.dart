@@ -152,25 +152,20 @@ class _CubePageViewState extends State<CubePageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Center(
-        child: ValueListenableBuilder<double>(
-          valueListenable: _pageNotifier,
-          builder: (_, value, child) => PageView.builder(
-            controller: _pageController,
-            onPageChanged: widget.onPageChanged,
-            physics: const ClampingScrollPhysics(),
-            itemCount: widget.children.length,
-            itemBuilder: (_, index) {
-              return CubeWidget(
-                child: widget.children[index],
-                index: index,
-                pageNotifier: value,
-              );
-            },
-          ),
-        ),
+    return ValueListenableBuilder<double>(
+      valueListenable: _pageNotifier,
+      builder: (_, value, child) => PageView.builder(
+        controller: _pageController,
+        onPageChanged: widget.onPageChanged,
+        physics: const ClampingScrollPhysics(),
+        itemCount: widget.children.length,
+        itemBuilder: (_, index) {
+          return CubeWidget(
+            child: widget.children[index],
+            index: index,
+            pageNotifier: value,
+          );
+        },
       ),
     );
   }
@@ -212,11 +207,13 @@ class CubeWidget extends StatelessWidget {
       child: Stack(
         children: [
           child,
-          Positioned.fill(
-            child: Opacity(
-              opacity: opacity ?? 1,
-              child: Container(
-                color: Colors.black,
+          IgnorePointer(
+            child: Positioned.fill(
+              child: Opacity(
+                opacity: opacity ?? 1,
+                child: Container(
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
