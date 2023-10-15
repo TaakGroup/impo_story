@@ -203,7 +203,7 @@ class CubeWidget extends StatelessWidget {
     transform.rotateY(-degToRad(rotationY ?? 0));
 
     return Transform(
-      alignment: isLeaving ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: !isLeaving ? Alignment.centerRight : Alignment.centerLeft,
       transform: transform,
       child: Stack(
         children: [
