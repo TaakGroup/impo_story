@@ -38,40 +38,41 @@ class StoryThreadsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: CubePageView(
         onPageChanged: (index) => controller.onPageChanged(threads[index]),
         controller: controller.pageController,
         // itemCount: threads.length,
         children: [
-          for(var model in threads)
-          StoryView(
-            inline: true,
-            showShadow: true,
-            onPreviousPressed: controller.previousThreads,
-            controller: controller.findController(model.id),
-            onComplete: () {
-              if (threads == threads.last) {
-                onComplete?.call();
-              } else {
-                controller.nextThreads();
-              }
-            },
-            onStoryShow: onStoryShow,
-            retryButtonStyle: retryButtonStyle,
-            errorTextStyle: errorTextStyle,
-            indicatorForegroundColor: indicatorForegroundColor,
-            title: title,
-            avatar: avatar,
-            storyItems: [
-              for (int j = 0; j < threads.length; j++)
-                StoryItem.fromModel(
-                  model.stories[j],
-                  controller.findController(model.id),
-                  onButtonPressed: onButtonPressed,
-                  buttonStyle: buttonStyle,
-                )
-            ],
-          )
+          for (var model in threads)
+            StoryView(
+              inline: true,
+              showShadow: true,
+              onPreviousPressed: controller.previousThreads,
+              controller: controller.findController(model.id),
+              onComplete: () {
+                if (threads == threads.last) {
+                  onComplete?.call();
+                } else {
+                  controller.nextThreads();
+                }
+              },
+              onStoryShow: onStoryShow,
+              retryButtonStyle: retryButtonStyle,
+              errorTextStyle: errorTextStyle,
+              indicatorForegroundColor: indicatorForegroundColor,
+              title: title,
+              avatar: avatar,
+              storyItems: [
+                for (int j = 0; j < threads.length; j++)
+                  StoryItem.fromModel(
+                    model.stories[j],
+                    controller.findController(model.id),
+                    onButtonPressed: onButtonPressed,
+                    buttonStyle: buttonStyle,
+                  )
+              ],
+            )
         ],
       ),
     );
@@ -150,23 +151,26 @@ class _CubePageViewState extends State<CubePageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Center(
-        child: ValueListenableBuilder<double>(
-          valueListenable: _pageNotifier,
-          builder: (_, value, child) => PageView.builder(
-            controller: _pageController,
-            onPageChanged: widget.onPageChanged,
-            physics: const ClampingScrollPhysics(),
-            itemCount: widget.children.length,
-            itemBuilder: (_, index) {
-              return CubeWidget(
-                child: widget.children[index],
-                index: index,
-                pageNotifier: value,
-              );
-            },
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Material(
+        color: Colors.transparent,
+        child: Center(
+          child: ValueListenableBuilder<double>(
+            valueListenable: _pageNotifier,
+            builder: (_, value, child) => PageView.builder(
+              controller: _pageController,
+              onPageChanged: widget.onPageChanged,
+              physics: const ClampingScrollPhysics(),
+              itemCount: widget.children.length,
+              itemBuilder: (_, index) {
+                return CubeWidget(
+                  child: widget.children[index],
+                  index: index,
+                  pageNotifier: value,
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -207,7 +211,7 @@ class CubeWidget extends StatelessWidget {
       transform: transform,
       child: Stack(
         children: [
-          child,
+          Directionality(textDirection: TextDirection.rtl, child: child),
           Positioned.fill(
             child: Opacity(
               opacity: opacity ?? 1,
