@@ -6,7 +6,7 @@ class StoryThreadsController {
   PageController pageController = PageController();
   Map<String, StoryController> _controllers = {};
 
-  // jumpTo(int index) => pageController.(index);
+  jumpTo(int index) => pageController.jumpToPage(index);
 
   void nextThreads() => pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
 
@@ -15,7 +15,7 @@ class StoryThreadsController {
   StoryController findController(String id) => _controllers[id] ??= StoryController();
 
   void onPageChanged(StoryThreadsModel thread) {
-    // _controllers.forEach((key, value) => value.pause());
-    // findController(thread.id).play();
+    _controllers.forEach((key, value) => value.pause());
+    findController(thread.id).play();
   }
 }
