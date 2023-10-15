@@ -10,7 +10,7 @@ class StoryThreadsModel extends Equatable {
     this.stories = [for (var mapJson in json['stories']) StoryModel.fromJson(mapJson)];
   }
 
-  bool get seen {
+  bool get isSeen {
     bool flag = false;
     for (var story in stories) {
       if (story.isViewed) {
@@ -23,5 +23,5 @@ class StoryThreadsModel extends Equatable {
   }
 
   @override
-  List<Object?> get props => [seen];
+  List<Object?> get props => [isSeen];
 }
