@@ -73,7 +73,7 @@ class StoryThreadsView extends StatelessWidget {
                   )
               ],
             )
-        ].reversed.toList(),
+        ],
       ),
     );
   }
@@ -158,7 +158,6 @@ class _CubePageViewState extends State<CubePageView> {
         child: ValueListenableBuilder<double>(
           valueListenable: _pageNotifier,
           builder: (_, value, child) => PageView.builder(
-            reverse: true,
             controller: _pageController,
             onPageChanged: widget.onPageChanged,
             physics: const ClampingScrollPhysics(),
