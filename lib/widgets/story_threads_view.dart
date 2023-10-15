@@ -200,7 +200,7 @@ class CubeWidget extends StatelessWidget {
     final opacity = lerpDouble(0, 1, t.abs())?.clamp(0.0, 1.0);
     final transform = Matrix4.identity();
     transform.setEntry(3, 2, 0.003);
-    transform.rotateY(-degToRad(rotationY ?? 0));
+    transform.rotateY(degToRad(rotationY ?? 0));
 
     return Transform(
       alignment: !isLeaving ? Alignment.centerRight : Alignment.centerLeft,
