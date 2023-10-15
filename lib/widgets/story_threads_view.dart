@@ -202,26 +202,23 @@ class CubeWidget extends StatelessWidget {
     final transform = Matrix4.identity();
     transform.setEntry(3, 2, 0.003);
     transform.rotateY(-degToRad(rotationY ?? 0));
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Transform(
-        alignment: isLeaving ? Alignment.centerRight : Alignment.centerLeft,
-        transform: transform,
-        child: Stack(
-          children: [
-            child,
-            Positioned.fill(
-              child: Opacity(
-                opacity: opacity ?? 1,
+    return Transform(
+      alignment: isLeaving ? Alignment.centerRight : Alignment.centerLeft,
+      transform: transform,
+      child: Stack(
+        children: [
+          child,
+          Positioned.fill(
+            child: Opacity(
+              opacity: opacity ?? 1,
+              child: Container(
                 child: Container(
-                  child: Container(
-                    color: Colors.black,
-                  ),
+                  color: Colors.black,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
