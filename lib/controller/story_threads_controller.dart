@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_carousel_slider/carousel_slider.dart';
 import 'package:story_view/controller/story_controller.dart';
+import 'package:story_view/models/story_threads_model.dart';
 
 class StoryThreadsController {
   CarouselSliderController pageController = CarouselSliderController();
@@ -14,5 +15,8 @@ class StoryThreadsController {
 
   StoryController findController(String id) => _controllers[id] ??= StoryController();
 
-  void onPageChanged(thread) {}
+  void onPageChanged(StoryThreadsModel thread) {
+    _controllers.forEach((key, value) => value.pause());
+    findController(thread.id).play();
+  }
 }

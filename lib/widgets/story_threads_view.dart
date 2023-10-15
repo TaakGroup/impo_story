@@ -40,7 +40,7 @@ class StoryThreadsView extends StatelessWidget {
     return Scaffold(
       body: CarouselSlider.builder(
         slideTransform: CubeTransform(),
-        // onPageChanged: (index) => controller.onPageChanged(threads[index]),
+        onSlideChanged: (index) => controller.onPageChanged(threads[index]),
         controller: controller.pageController,
         unlimitedMode: true,
         itemCount: threads.length,
