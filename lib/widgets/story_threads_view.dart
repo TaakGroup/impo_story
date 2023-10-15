@@ -207,16 +207,16 @@ class CubeWidget extends StatelessWidget {
       child: Stack(
         children: [
           child,
-          // IgnorePointer(
-          //   child: Positioned.fill(
-          //     child: Opacity(
-          //       opacity: opacity ?? 1,
-          //       child: Container(
-          //         color: Colors.black,
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Positioned.fill(
+            child: IgnorePointer(
+              child: Opacity(
+                opacity: opacity ?? 1,
+                child: Container(
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
