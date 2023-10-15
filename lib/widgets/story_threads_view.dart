@@ -71,9 +71,9 @@ class StoryThreadsView extends StatelessWidget {
                     onButtonPressed: onButtonPressed,
                     buttonStyle: buttonStyle,
                   )
-              ].reversed.toList(),
+              ],
             )
-        ],
+        ].reversed.toList(),
       ),
     );
   }
