@@ -71,7 +71,7 @@ class StoryThreadsView extends StatelessWidget {
                     onButtonPressed: onButtonPressed,
                     buttonStyle: buttonStyle,
                   )
-              ],
+              ].reversed.toList(),
             )
         ],
       ),
@@ -134,6 +134,7 @@ class _CubePageViewState extends State<CubePageView> {
 
   @override
   void initState() {
+    widget.children.reversed;
     _pageController = widget.controller;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _pageController.addListener(_listener);
@@ -151,26 +152,24 @@ class _CubePageViewState extends State<CubePageView> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.ltr,
-      child: Material(
-        color: Colors.transparent,
-        child: Center(
-          child: ValueListenableBuilder<double>(
-            valueListenable: _pageNotifier,
-            builder: (_, value, child) => PageView.builder(
-              controller: _pageController,
-              onPageChanged: widget.onPageChanged,
-              physics: const ClampingScrollPhysics(),
-              itemCount: widget.children.length,
-              itemBuilder: (_, index) {
-                return CubeWidget(
-                  child: widget.children[index],
-                  index: index,
-                  pageNotifier: value,
-                );
-              },
-            ),
+    return Material(
+      color: Colors.transparent,
+      child: Center(
+        child: ValueListenableBuilder<double>(
+          valueListenable: _pageNotifier,
+          builder: (_, value, child) => PageView.builder(
+            reverse: true,
+            controller: _pageController,
+            onPageChanged: widget.onPageChanged,
+            physics: const ClampingScrollPhysics(),
+            itemCount: widget.children.length,
+            itemBuilder: (_, index) {
+              return CubeWidget(
+                child: widget.children[index],
+                index: index,
+                pageNotifier: value,
+              );
+            },
           ),
         ),
       ),
@@ -197,6 +196,8 @@ class CubeWidget extends StatelessWidget {
     required this.child,
   }) : super(key: key);
 
+  double degToRad(num deg) => deg * (math.pi / 180.0);
+
   @override
   Widget build(BuildContext context) {
     final isLeaving = (index - pageNotifier) <= 0;
@@ -211,14 +212,12 @@ class CubeWidget extends StatelessWidget {
       transform: transform,
       child: Stack(
         children: [
-          Directionality(textDirection: TextDirection.rtl, child: child),
+          child,
           Positioned.fill(
             child: Opacity(
               opacity: opacity ?? 1,
               child: Container(
-                child: Container(
-                  color: Colors.black,
-                ),
+                color: Colors.black,
               ),
             ),
           ),
@@ -227,5 +226,3 @@ class CubeWidget extends StatelessWidget {
     );
   }
 }
-
-double degToRad(num deg) => deg * (math.pi / 180.0);
