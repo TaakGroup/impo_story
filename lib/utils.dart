@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'models/story_model.dart';
 
@@ -13,7 +14,7 @@ class StoryPipeline {
   StoryEvent? progressEvent = StoryEvent.none;
   final Function? retry;
 
-  StoryPipeline({this.storyState, this.videoEvent, this.progressEvent,this.retry});
+  StoryPipeline({this.storyState, this.videoEvent, this.progressEvent, this.retry});
 }
 
 class VerticalDragInfo {
@@ -44,7 +45,7 @@ class StoryCacheManager {
     Config(
       key,
       stalePeriod: const Duration(days: 3),
-      repo: JsonCacheInfoRepository(databaseName: key),
+      repo: kIsWeb ? NonStoringObjectProvider() : JsonCacheInfoRepository(databaseName: key),
     ),
   );
 
