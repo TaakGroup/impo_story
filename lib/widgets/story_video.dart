@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -55,15 +56,21 @@ class StoryVideoState extends State<StoryVideo> {
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
 
     print('1'*100);
-    final fileInfo = await StoryCacheManager.instance.getFileFromCache(widget.videoUrl);
+    if(!kIsWeb) {
+      final fileInfo = await StoryCacheManager.instance.getFileFromCache(widget.videoUrl);
 
-    if (fileInfo != null) {
-      print('2'*100);
-      this.playerController = VideoPlayerController.file(fileInfo.file);
+      if (!kIsWeb && fileInfo != null) {
+        print('2' * 100);
+        this.playerController = VideoPlayerController.file(fileInfo.file);
+      } else {
+        print('3' * 100);
+        this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+      }
     } else {
-      print('3'*100);
+      print('3.5 ' * 50);
       this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
     }
+
     print('4'*100);
     playerController?.initialize().then(
       (v) {
