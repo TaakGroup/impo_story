@@ -88,6 +88,7 @@ class StoryVideoState extends State<StoryVideo> {
         playerController!.play();
       },
       onError: (_) {
+        print(_);
         print('6'*100);
         SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
       },
