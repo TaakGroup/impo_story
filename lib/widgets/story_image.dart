@@ -50,7 +50,7 @@ class ImageLoader {
 
         final imageBytes = fileResponse.file.readAsBytesSync();
 
-        PaintingBinding.instance.instantiateImageCodec(imageBytes).then((codec) {
+        ui.instantiateImageCodec(imageBytes).then((codec) {
           this.frames = codec;
           this.state = StoryState.success;
           SchedulerBinding.instance.addPostFrameCallback((_) => loadEvent(StoryPipeline(storyState: StoryState.success)));
