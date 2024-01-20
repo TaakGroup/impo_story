@@ -55,26 +55,20 @@ class StoryVideoState extends State<StoryVideo> {
     widget.storyController.pause();
     SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.loading)));
 
-    print('1'*100);
     if(!kIsWeb) {
       final fileInfo = await StoryCacheManager.instance.getFileFromCache(widget.videoUrl);
 
       if (!kIsWeb && fileInfo != null) {
-        print('2' * 100);
         this.playerController = VideoPlayerController.file(fileInfo.file);
       } else {
-        print('3' * 100);
         this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
       }
     } else {
-      print('3.5 ' * 50);
       this.playerController = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
     }
 
-    print('4'*100);
     playerController?.initialize().then(
       (v) {
-        print('5'*100);
         widget.storyController.attachVideoController(playerController!);
 
         playerController?.addListener(() {
@@ -88,8 +82,6 @@ class StoryVideoState extends State<StoryVideo> {
         playerController!.play();
       },
       onError: (_) {
-        print(_);
-        print('6'*100);
         SchedulerBinding.instance.addPostFrameCallback((_) => widget.state(StoryPipeline(storyState: StoryState.failure, retry: initializeVideo)));
       },
     );

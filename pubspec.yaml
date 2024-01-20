@@ -17,6 +17,7 @@ dependencies:
   figma_squircle: ^0.5.3
   cached_network_image: ^3.0.0
   equatable: ^2.0.5
+  web_browser_detect: ^2.0.3
 #  like_button: ^2.0.5
 
 dev_dependencies:

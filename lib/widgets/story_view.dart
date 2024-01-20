@@ -3,10 +3,12 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:figma_squircle/figma_squircle.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:story_view/models/story_events.dart';
 import 'package:story_view/models/story_model.dart';
+import 'package:web_browser_detect/web_browser_detect.dart';
 
 import '../controller/story_controller.dart';
 import '../utils.dart';
@@ -266,6 +268,15 @@ class StoryItem {
     Map<String, dynamic>? requestHeaders,
   }) {
     Rx<StoryPipeline> loadEvent = StoryPipeline().obs;
+    if (kIsWeb) {
+      final browser = Browser();
+      if (browser.browserAgent == BrowserAgent.Safari) {
+        final ext = url.split('.').last;
+        if (ext == 'webm') {
+          url = url.replaceAll('.webm', '.mp4');
+        }
+      }
+    }
 
     return StoryItem(
       Container(
