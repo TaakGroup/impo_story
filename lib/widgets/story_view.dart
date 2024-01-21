@@ -754,53 +754,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      Visibility(
-                        visible: widget.progressPosition != ProgressPosition.none,
-                        child: Align(
-                          alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 28,
-                            ),
-                            child: Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      CircleAvatar(radius: 16, child: widget.avatar),
-                                      const SizedBox(width: 8),
-                                      widget.title ?? SizedBox(),
-                                      const SizedBox(width: 2),
-                                      widget.mark ?? SizedBox(),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      SizedBox.square(
-                                        dimension: 24,
-                                        child: Obx(
-                                          () => _currentView.state.value.storyState == StoryState.buffering
-                                              ? CircularProgressIndicator(
-                                                  strokeWidth: 1.0,
-                                                  color: Colors.white,
-                                                )
-                                              : SizedBox(),
-                                        ),
-                                      ),
-                                      widget.leading ?? SizedBox(),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+
                       Align(
                         alignment: Alignment.centerLeft,
                         heightFactor: 1,
@@ -926,6 +880,53 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                           else
                             return SizedBox();
                         }),
+                      ),
+                      Visibility(
+                        visible: widget.progressPosition != ProgressPosition.none,
+                        child: Align(
+                          alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 28,
+                            ),
+                            child: Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(radius: 16, child: widget.avatar),
+                                      const SizedBox(width: 8),
+                                      widget.title ?? SizedBox(),
+                                      const SizedBox(width: 2),
+                                      widget.mark ?? SizedBox(),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox.square(
+                                        dimension: 24,
+                                        child: Obx(
+                                              () => _currentView.state.value.storyState == StoryState.buffering
+                                              ? CircularProgressIndicator(
+                                            strokeWidth: 1.0,
+                                            color: Colors.white,
+                                          )
+                                              : SizedBox(),
+                                        ),
+                                      ),
+                                      widget.leading ?? SizedBox(),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                       // Positioned(
                       //   bottom: 20,
