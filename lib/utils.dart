@@ -44,7 +44,7 @@ class StoryCacheManager {
   static CacheManager instance = CacheManager(
     Config(
       key,
-      stalePeriod: const Duration(days: 3),
+      stalePeriod: const Duration(days: 60),
       repo: kIsWeb ? NonStoringObjectProvider() : JsonCacheInfoRepository(databaseName: key),
     ),
   );
