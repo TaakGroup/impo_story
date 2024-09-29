@@ -14,6 +14,7 @@ import '../controller/story_controller.dart';
 import '../utils.dart';
 import 'story_image.dart';
 import 'story_video.dart';
+import 'dart:io';
 
 /// Indicates where the progress indicators should be placed.
 enum ProgressPosition { top, bottom, none }
@@ -275,6 +276,11 @@ class StoryItem {
         if (ext == 'webm') {
           url = url.replaceAll('.webm', '.mp4');
         }
+      }
+    } else if(Platform.isIOS){
+      final ext = url.split('.').last;
+      if (ext == 'webm') {
+        url = url.replaceAll('.webm', '.mp4');
       }
     }
 
