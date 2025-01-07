@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
+// import 'dart:ui';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/foundation.dart';
